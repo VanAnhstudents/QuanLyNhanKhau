@@ -16,5 +16,10 @@ namespace QuanLyNhanKhau.Forms
         {
             InitializeComponent();
         }
+
+        private void phườngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
