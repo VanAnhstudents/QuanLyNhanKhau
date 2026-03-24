@@ -89,6 +89,7 @@
             this.tổDânPhốToolStripMenuItem.Name = "tổDânPhốToolStripMenuItem";
             this.tổDânPhốToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.tổDânPhốToolStripMenuItem.Text = "Tổ dân phố";
+            this.tổDânPhốToolStripMenuItem.Click += new System.EventHandler(this.tổDânPhốToolStripMenuItem_Click);
             // 
             // nhânKhẩuToolStripMenuItem
             // 

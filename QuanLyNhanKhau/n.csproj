@@ -50,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\DatabaseHelper.cs" />
     <Compile Include="Forms\BaoCao\frmBaoCao.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -136,8 +137,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Forms\DanhMuc\frmPhuong.resx">
-      <DependentUpon>frmPhuong.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\DanhMuc\frmToDanPho.resx">
+      <DependentUpon>frmToDanPho.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
