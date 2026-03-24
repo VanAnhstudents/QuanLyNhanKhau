@@ -82,6 +82,7 @@
             this.phườngToolStripMenuItem.Name = "phườngToolStripMenuItem";
             this.phườngToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
             this.phườngToolStripMenuItem.Text = "Phường";
+            this.phườngToolStripMenuItem.Click += new System.EventHandler(this.phườngToolStripMenuItem_Click);
             // 
             // tổDânPhốToolStripMenuItem
             // 
