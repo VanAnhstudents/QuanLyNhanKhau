@@ -5,8 +5,7 @@ namespace QuanLyNhanKhau.Database
 {
     public static class DatabaseHelper
     {
-        private static string connectionString =
-            "Server=DESKTOP-451IHQ2;Database=QuanLyNhanKhau;Integrated Security=True;";
+        private static string connectionString = "Server=DESKTOP-451IHQ2;Database=QuanLyNhanKhau;Integrated Security=True;";
 
         public static SqlConnection GetConnection()
         {

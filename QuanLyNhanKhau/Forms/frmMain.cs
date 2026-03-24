@@ -39,5 +39,17 @@ namespace QuanLyNhanKhau.Forms
             f.Show();
             f.Activate();
         }
+
+        private void phườngToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Form f = findOpendedForm("frmPhuong");
+            if (f == null)
+            {
+                f = new frmPhuong();
+                f.MdiParent = this;
+            }
+            f.Show();
+            f.Activate();
+        }
     }
 }
