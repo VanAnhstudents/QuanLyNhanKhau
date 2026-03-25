@@ -23,7 +23,7 @@ namespace QuanLyNhanKhau.Forms.DanhMuc
             // Register event handlers
             this.Load += FrmToDanPho_Load;
             
-            this.listView1.SelectedIndexChanged += ListView1_SelectedIndexChanged;
+            this.listTodanPho.SelectedIndexChanged += ListView1_SelectedIndexChanged;
             
             this.rdoXoa.CheckedChanged += UpdateControlState;
             this.rdoThem.CheckedChanged += UpdateControlState;
@@ -36,18 +36,18 @@ namespace QuanLyNhanKhau.Forms.DanhMuc
         private void FrmToDanPho_Load(object sender, EventArgs e)
         {
             // Configure ListView settings
-            listView1.View = View.Details;
-            listView1.FullRowSelect = true;
-            listView1.GridLines = true;
-            listView1.MultiSelect = false;
+            listTodanPho.View = View.Details;
+            listTodanPho.FullRowSelect = true;
+            listTodanPho.GridLines = true;
+            listTodanPho.MultiSelect = false;
 
-            listView1.Columns.Add("Mã TDP", 60);
-            listView1.Columns.Add("Tên TDP", 150);
-            listView1.Columns.Add("Mã Phường", 80);
-            listView1.Columns.Add("Họ Tên CSKV", 150);
-            listView1.Columns.Add("SĐT CSKV", 100);
-            listView1.Columns.Add("Họ Tên Tổ Trưởng", 150);
-            listView1.Columns.Add("SĐT Tổ Trưởng", 100);
+            listTodanPho.Columns.Add("Mã TDP", 60);
+            listTodanPho.Columns.Add("Tên TDP", 150);
+            listTodanPho.Columns.Add("Mã Phường", 80);
+            listTodanPho.Columns.Add("Họ Tên CSKV", 150);
+            listTodanPho.Columns.Add("SĐT CSKV", 100);
+            listTodanPho.Columns.Add("Họ Tên Tổ Trưởng", 150);
+            listTodanPho.Columns.Add("SĐT Tổ Trưởng", 100);
 
             // Select "Thêm" radio by default
             rdoThem.Checked = true;
@@ -58,7 +58,7 @@ namespace QuanLyNhanKhau.Forms.DanhMuc
 
         private void LoadData()
         {
-            listView1.Items.Clear();
+            listTodanPho.Items.Clear();
             try
             {
                 // Fetch existing data using DatabaseHelper
@@ -76,7 +76,7 @@ namespace QuanLyNhanKhau.Forms.DanhMuc
                     
                     // Store table PK in ListViewItem.Tag for editing and deleting
                     item.Tag = row["MaTDP"].ToString();
-                    listView1.Items.Add(item);
+                    listTodanPho.Items.Add(item);
                 }
             }
             catch (Exception ex)
@@ -106,9 +106,9 @@ namespace QuanLyNhanKhau.Forms.DanhMuc
 
         private void ListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listView1.SelectedItems.Count > 0)
+            if (listTodanPho.SelectedItems.Count > 0)
             {
-                ListViewItem item = listView1.SelectedItems[0];
+                ListViewItem item = listTodanPho.SelectedItems[0];
                 
                 // Track currently selected item's primary key
                 _maTDP = int.Parse(item.Tag.ToString());
@@ -216,9 +216,9 @@ namespace QuanLyNhanKhau.Forms.DanhMuc
             txtDienThoaiToTruong.Clear();
             
             // Unselect the ListView items
-            if (listView1.SelectedItems.Count > 0)
+            if (listTodanPho.SelectedItems.Count > 0)
             {
-                listView1.SelectedItems.Clear();
+                listTodanPho.SelectedItems.Clear();
             }
         }
     }

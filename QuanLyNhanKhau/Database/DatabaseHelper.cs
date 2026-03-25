@@ -1,11 +1,13 @@
-﻿using System.Data;
+﻿using System.Configuration;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace QuanLyNhanKhau.Database
 {
     public static class DatabaseHelper
     {
-        private static string connectionString = "Server=DESKTOP-451IHQ2;Database=QuanLyNhanKhau;Integrated Security=True;";
+        private static string connectionString = ConfigurationManager.ConnectionStrings["db_vanhdev"].ConnectionString;
+        // Sửa connectionString khi chạy trên máy cá nhân với tên tương ứng trong App.config
 
         public static SqlConnection GetConnection()
         {

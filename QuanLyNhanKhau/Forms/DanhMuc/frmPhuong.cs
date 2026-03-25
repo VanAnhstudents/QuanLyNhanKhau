@@ -36,5 +36,20 @@ namespace QuanLyNhanKhau.Forms.DanhMuc
         {
 
         }
+
+        private void txtTen_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtGhiChu_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void lblGhiChu_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
