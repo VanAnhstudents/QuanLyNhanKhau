@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.listTodanPho = new System.Windows.Forms.ListView();
             this.rdoThem = new System.Windows.Forms.RadioButton();
             this.rdoSua = new System.Windows.Forms.RadioButton();
             this.rdoXoa = new System.Windows.Forms.RadioButton();
@@ -47,25 +47,25 @@
             this.btnExecute = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // listView1
+            // listTodanPho
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.listTodanPho.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(12, 12);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(776, 232);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listTodanPho.HideSelection = false;
+            this.listTodanPho.Location = new System.Drawing.Point(12, 12);
+            this.listTodanPho.Name = "listTodanPho";
+            this.listTodanPho.Size = new System.Drawing.Size(776, 232);
+            this.listTodanPho.TabIndex = 0;
+            this.listTodanPho.UseCompatibleStateImageBehavior = false;
             // 
             // rdoThem
             // 
             this.rdoThem.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.rdoThem.AutoSize = true;
-            this.rdoThem.Location = new System.Drawing.Point(12, 418);
+            this.rdoThem.Location = new System.Drawing.Point(12, 421);
             this.rdoThem.Name = "rdoThem";
-            this.rdoThem.Size = new System.Drawing.Size(63, 20);
+            this.rdoThem.Size = new System.Drawing.Size(52, 17);
             this.rdoThem.TabIndex = 1;
             this.rdoThem.TabStop = true;
             this.rdoThem.Text = "Thêm";
@@ -75,9 +75,9 @@
             // 
             this.rdoSua.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.rdoSua.AutoSize = true;
-            this.rdoSua.Location = new System.Drawing.Point(81, 419);
+            this.rdoSua.Location = new System.Drawing.Point(81, 422);
             this.rdoSua.Name = "rdoSua";
-            this.rdoSua.Size = new System.Drawing.Size(52, 20);
+            this.rdoSua.Size = new System.Drawing.Size(44, 17);
             this.rdoSua.TabIndex = 2;
             this.rdoSua.TabStop = true;
             this.rdoSua.Text = "Sửa";
@@ -87,9 +87,9 @@
             // 
             this.rdoXoa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.rdoXoa.AutoSize = true;
-            this.rdoXoa.Location = new System.Drawing.Point(139, 418);
+            this.rdoXoa.Location = new System.Drawing.Point(139, 421);
             this.rdoXoa.Name = "rdoXoa";
-            this.rdoXoa.Size = new System.Drawing.Size(52, 20);
+            this.rdoXoa.Size = new System.Drawing.Size(44, 17);
             this.rdoXoa.TabIndex = 3;
             this.rdoXoa.TabStop = true;
             this.rdoXoa.Text = "Xoá";
@@ -102,7 +102,7 @@
             this.lblTenTDP.AutoSize = true;
             this.lblTenTDP.Location = new System.Drawing.Point(12, 253);
             this.lblTenTDP.Name = "lblTenTDP";
-            this.lblTenTDP.Size = new System.Drawing.Size(100, 16);
+            this.lblTenTDP.Size = new System.Drawing.Size(83, 13);
             this.lblTenTDP.TabIndex = 4;
             this.lblTenTDP.Text = "Tên tổ dân phố:";
             // 
@@ -112,7 +112,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtTenTDP.Location = new System.Drawing.Point(121, 250);
             this.txtTenTDP.Name = "txtTenTDP";
-            this.txtTenTDP.Size = new System.Drawing.Size(667, 22);
+            this.txtTenTDP.Size = new System.Drawing.Size(667, 20);
             this.txtTenTDP.TabIndex = 5;
             // 
             // txtMaPhuong
@@ -121,7 +121,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtMaPhuong.Location = new System.Drawing.Point(121, 278);
             this.txtMaPhuong.Name = "txtMaPhuong";
-            this.txtMaPhuong.Size = new System.Drawing.Size(667, 22);
+            this.txtMaPhuong.Size = new System.Drawing.Size(667, 20);
             this.txtMaPhuong.TabIndex = 7;
             // 
             // lblMaPhuong
@@ -131,7 +131,7 @@
             this.lblMaPhuong.AutoSize = true;
             this.lblMaPhuong.Location = new System.Drawing.Point(12, 281);
             this.lblMaPhuong.Name = "lblMaPhuong";
-            this.lblMaPhuong.Size = new System.Drawing.Size(77, 16);
+            this.lblMaPhuong.Size = new System.Drawing.Size(64, 13);
             this.lblMaPhuong.TabIndex = 6;
             this.lblMaPhuong.Text = "Mã phường:";
             // 
@@ -141,7 +141,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtHoTenCSKV.Location = new System.Drawing.Point(121, 306);
             this.txtHoTenCSKV.Name = "txtHoTenCSKV";
-            this.txtHoTenCSKV.Size = new System.Drawing.Size(667, 22);
+            this.txtHoTenCSKV.Size = new System.Drawing.Size(667, 20);
             this.txtHoTenCSKV.TabIndex = 9;
             // 
             // lblHoTenCSKV
@@ -151,7 +151,7 @@
             this.lblHoTenCSKV.AutoSize = true;
             this.lblHoTenCSKV.Location = new System.Drawing.Point(12, 309);
             this.lblHoTenCSKV.Name = "lblHoTenCSKV";
-            this.lblHoTenCSKV.Size = new System.Drawing.Size(84, 16);
+            this.lblHoTenCSKV.Size = new System.Drawing.Size(70, 13);
             this.lblHoTenCSKV.TabIndex = 8;
             this.lblHoTenCSKV.Text = "Họ tên CSKV";
             // 
@@ -161,7 +161,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDienThoaiCSKV.Location = new System.Drawing.Point(121, 334);
             this.txtDienThoaiCSKV.Name = "txtDienThoaiCSKV";
-            this.txtDienThoaiCSKV.Size = new System.Drawing.Size(667, 22);
+            this.txtDienThoaiCSKV.Size = new System.Drawing.Size(667, 20);
             this.txtDienThoaiCSKV.TabIndex = 11;
             // 
             // lblDienThoaiCSKV
@@ -171,7 +171,7 @@
             this.lblDienThoaiCSKV.AutoSize = true;
             this.lblDienThoaiCSKV.Location = new System.Drawing.Point(12, 337);
             this.lblDienThoaiCSKV.Name = "lblDienThoaiCSKV";
-            this.lblDienThoaiCSKV.Size = new System.Drawing.Size(75, 16);
+            this.lblDienThoaiCSKV.Size = new System.Drawing.Size(63, 13);
             this.lblDienThoaiCSKV.TabIndex = 10;
             this.lblDienThoaiCSKV.Text = "SĐT CSKV:";
             // 
@@ -181,7 +181,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtHoTenToTruong.Location = new System.Drawing.Point(121, 362);
             this.txtHoTenToTruong.Name = "txtHoTenToTruong";
-            this.txtHoTenToTruong.Size = new System.Drawing.Size(667, 22);
+            this.txtHoTenToTruong.Size = new System.Drawing.Size(667, 20);
             this.txtHoTenToTruong.TabIndex = 13;
             // 
             // lblHoTenToTruong
@@ -191,7 +191,7 @@
             this.lblHoTenToTruong.AutoSize = true;
             this.lblHoTenToTruong.Location = new System.Drawing.Point(12, 365);
             this.lblHoTenToTruong.Name = "lblHoTenToTruong";
-            this.lblHoTenToTruong.Size = new System.Drawing.Size(103, 16);
+            this.lblHoTenToTruong.Size = new System.Drawing.Size(87, 13);
             this.lblHoTenToTruong.TabIndex = 12;
             this.lblHoTenToTruong.Text = "Họ tên tổ trưởng:";
             // 
@@ -201,7 +201,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtDienThoaiToTruong.Location = new System.Drawing.Point(121, 390);
             this.txtDienThoaiToTruong.Name = "txtDienThoaiToTruong";
-            this.txtDienThoaiToTruong.Size = new System.Drawing.Size(667, 22);
+            this.txtDienThoaiToTruong.Size = new System.Drawing.Size(667, 20);
             this.txtDienThoaiToTruong.TabIndex = 15;
             // 
             // lblDienThoaiToTruong
@@ -211,7 +211,7 @@
             this.lblDienThoaiToTruong.AutoSize = true;
             this.lblDienThoaiToTruong.Location = new System.Drawing.Point(12, 396);
             this.lblDienThoaiToTruong.Name = "lblDienThoaiToTruong";
-            this.lblDienThoaiToTruong.Size = new System.Drawing.Size(91, 16);
+            this.lblDienThoaiToTruong.Size = new System.Drawing.Size(77, 13);
             this.lblDienThoaiToTruong.TabIndex = 14;
             this.lblDienThoaiToTruong.Text = "SĐT tổ trưởng:";
             // 
@@ -245,7 +245,7 @@
             this.Controls.Add(this.rdoXoa);
             this.Controls.Add(this.rdoSua);
             this.Controls.Add(this.rdoThem);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.listTodanPho);
             this.Name = "frmToDanPho";
             this.Text = "Tổ dân phố";
             this.ResumeLayout(false);
@@ -255,7 +255,7 @@
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView listTodanPho;
         private System.Windows.Forms.RadioButton rdoThem;
         private System.Windows.Forms.RadioButton rdoSua;
         private System.Windows.Forms.RadioButton rdoXoa;
