@@ -16,5 +16,20 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
         {
             InitializeComponent();
         }
+
+        private void frmNguoiPhuThuoc_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void grpCac_Enter(object sender, EventArgs e)
+        {
+
+        }
+
+        private void cboQuanHe_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
     }
 }
