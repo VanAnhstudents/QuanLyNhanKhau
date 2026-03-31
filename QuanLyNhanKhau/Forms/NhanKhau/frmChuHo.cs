@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace QuanLyNhanKhau.Forms.NhanKhau
 {
-    public partial class frmChoHo : Form
+    public partial class frmChuHo : Form
     {
-        public frmChoHo()
+        public frmChuHo()
         {
             InitializeComponent();
         }

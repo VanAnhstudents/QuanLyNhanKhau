@@ -149,6 +149,21 @@ END
 GO
 
 -- ============================================================
+CREATE OR ALTER PROCEDURE sp_GetAllPhuong
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT 
+        MaPhuong,
+        TenPhuong,
+        DienThoai,
+        TruSo
+    FROM tblPhuong
+    ORDER BY MaPhuong ASC;
+END
+GO
+
+-- ============================================================
 -- STORED PROCEDURES — TỔ DÂN PHỐ
 -- ============================================================
 CREATE OR ALTER PROCEDURE sp_ThemTDP
