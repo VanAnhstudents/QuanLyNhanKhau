@@ -41,6 +41,10 @@
     <Reference Include="CrystalDecisions.ReportSource, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.Shared, Version=13.0.4000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Configuration.ConfigurationManager, Version=10.0.0.5, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Configuration.ConfigurationManager.10.0.5\lib\net462\System.Configuration.ConfigurationManager.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\DatabaseHelper.cs" />
     <Compile Include="Forms\BaoCao\frmBaoCao.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,11 +118,11 @@
     <Compile Include="Forms\NghiepVu\frmTachHo.Designer.cs">
       <DependentUpon>frmTachHo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NhanKhau\frmChoHo.cs">
+    <Compile Include="Forms\NhanKhau\frmChuHo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NhanKhau\frmChoHo.Designer.cs">
-      <DependentUpon>frmChoHo.cs</DependentUpon>
+    <Compile Include="Forms\NhanKhau\frmChuHo.Designer.cs">
+      <DependentUpon>frmChuHo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\NhanKhau\frmNguoiPhuThuoc.cs">
       <SubType>Form</SubType>
@@ -160,6 +165,9 @@
     <EmbeddedResource Include="Forms\DanhMuc\frmPhuong.resx">
       <DependentUpon>frmPhuong.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DanhMuc\frmToDanPho.resx">
+      <DependentUpon>frmToDanPho.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
     </EmbeddedResource>
@@ -168,6 +176,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NhanKhau\frmNguoiPhuThuoc.resx">
       <DependentUpon>frmNguoiPhuThuoc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmBaoTu.resx">
+      <DependentUpon>frmBaoTu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmChuyenDen.resx">
+      <DependentUpon>frmChuyenDen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmChuyenDi.resx">
+      <DependentUpon>frmChuyenDi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmKhaiSinh.resx">
+      <DependentUpon>frmKhaiSinh.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmNhapHo.resx">
+      <DependentUpon>frmNhapHo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmTachHo.resx">
+      <DependentUpon>frmTachHo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NhanKhau\frmChuHo.resx">
+      <DependentUpon>frmChuHo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -192,6 +221,7 @@
     </EmbeddedResource>
     <None Include="GUIDE.md" />
     <None Include="Models\.gitkeep" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
