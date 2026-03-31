@@ -115,11 +115,11 @@
     <Compile Include="Forms\NghiepVu\frmTachHo.Designer.cs">
       <DependentUpon>frmTachHo.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\NhanKhau\frmChoHo.cs">
+    <Compile Include="Forms\NhanKhau\frmChuHo.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\NhanKhau\frmChoHo.Designer.cs">
-      <DependentUpon>frmChoHo.cs</DependentUpon>
+    <Compile Include="Forms\NhanKhau\frmChuHo.Designer.cs">
+      <DependentUpon>frmChuHo.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\NhanKhau\frmNguoiPhuThuoc.cs">
       <SubType>Form</SubType>
@@ -149,6 +149,27 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmBaoTu.resx">
+      <DependentUpon>frmBaoTu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmChuyenDen.resx">
+      <DependentUpon>frmChuyenDen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmChuyenDi.resx">
+      <DependentUpon>frmChuyenDi.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmKhaiSinh.resx">
+      <DependentUpon>frmKhaiSinh.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmNhapHo.resx">
+      <DependentUpon>frmNhapHo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmTachHo.resx">
+      <DependentUpon>frmTachHo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NhanKhau\frmChuHo.resx">
+      <DependentUpon>frmChuHo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
