@@ -394,6 +394,48 @@ BEGIN
 END
 GO
 
+CREATE OR ALTER PROCEDURE sp_GetThanhVienTrongHo
+    @MaNK INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Chủ hộ (luôn lên đầu)
+    SELECT 
+        n.HoTen,
+        CASE n.GioiTinh 
+            WHEN 1 THEN N'Nam' 
+            ELSE N'Nữ' 
+        END AS GioiTinh,
+        N'Chủ hộ' AS QuanHe,
+        n.NgheNghiep,
+        n.TrangThai,
+        0 AS SortOrder
+    FROM tblNhankhau n
+    WHERE n.MaNK = @MaNK
+
+    UNION ALL
+
+    -- Người phụ thuộc
+    SELECT 
+        pt.HoTen,
+        CASE pt.GioiTinh 
+            WHEN 1 THEN N'Nam' 
+            ELSE N'Nữ' 
+        END AS GioiTinh,
+        pt.QuanHe,
+        pt.NgheNghiep,
+        pt.TrangThai,
+        1 AS SortOrder
+    FROM tblNguoi_phu_thuoc pt
+    WHERE pt.MaNK = @MaNK
+
+    ORDER BY SortOrder, HoTen;
+END
+GO
+
+EXEC sp_GetThanhVienTrongHo @MaNK = 1;
+
 -- Q07: Chuyển đi
 CREATE OR ALTER PROCEDURE sp_ChuyenDi
     @MaNK           INT,
@@ -501,3 +543,4 @@ BEGIN
     END CATCH
 END
 GO
+
