@@ -544,3 +544,240 @@ BEGIN
 END
 GO
 
+USE QuanLyNhanKhau;
+GO
+
+-- ============================================================
+-- sp_TimKiemNhanKhau
+-- Tìm kiếm chủ hộ theo tên (dùng chung cho cả 4 form)
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_TimKiemNhanKhau
+    @TuKhoa NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT MaNK, HoTen, DiaChi, TrangThai
+    FROM   tblNhankhau
+    WHERE  HoTen LIKE N'%' + @TuKhoa + N'%'
+    ORDER BY HoTen;
+END
+GO
+
+-- ============================================================
+-- sp_GetThanhVienHo
+-- Lấy toàn bộ thành viên của một hộ (chủ hộ + người phụ thuộc)
+-- MaNPT = 0 đánh dấu chủ hộ
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_GetThanhVienHo
+    @MaNK INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT
+        n.MaNK,
+        0 AS MaNPT,
+        n.HoTen,
+        CASE n.GioiTinh WHEN 1 THEN N'Nam' ELSE N'Nữ' END AS GioiTinh,
+        N'Chủ hộ'   AS QuanHe,
+        n.NgheNghiep,
+        n.TrangThai
+    FROM tblNhankhau n
+    WHERE n.MaNK = @MaNK
+
+    UNION ALL
+
+    SELECT
+        pt.MaNK,
+        pt.MaNPT,
+        pt.HoTen,
+        CASE pt.GioiTinh WHEN 1 THEN N'Nam' ELSE N'Nữ' END AS GioiTinh,
+        pt.QuanHe,
+        pt.NgheNghiep,
+        pt.TrangThai
+    FROM tblNguoi_phu_thuoc pt
+    WHERE pt.MaNK = @MaNK
+    ORDER BY MaNPT;
+END
+GO
+
+-- ============================================================
+-- sp_GetAllTDP
+-- Lấy danh sách tổ dân phố (dùng cho ComboBox)
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_GetAllTDP
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT
+        t.MaTDP,
+        t.TenTDP + N' – ' + p.TenPhuong AS TenTDP,
+        t.MaPhuong
+    FROM tblTodanpho t
+    JOIN tblPhuong   p ON t.MaPhuong = p.MaPhuong
+    ORDER BY t.MaTDP;
+END
+GO
+
+-- ============================================================
+-- sp_ChuyenDiCaNhan
+-- Chuyển đi một người phụ thuộc (không kéo cả hộ)
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_ChuyenDiCaNhan
+    @MaNPT          INT,
+    @NguoiThucHien  NVARCHAR(100),
+    @GhiChu         NVARCHAR(500)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        DECLARE @MaNK INT;
+        SELECT @MaNK = MaNK FROM tblNguoi_phu_thuoc WHERE MaNPT = @MaNPT;
+
+        UPDATE tblNguoi_phu_thuoc
+        SET    TrangThai = N'Đã chuyển đi'
+        WHERE  MaNPT = @MaNPT;
+
+        INSERT INTO tblBienDong(MaNK, MaNPT, LoaiBienDong, NgayBienDong, NguoiThucHien, GhiChu)
+        VALUES(@MaNK, @MaNPT, N'Chuyển đi', GETDATE(), @NguoiThucHien, @GhiChu);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+GO
+
+-- ============================================================
+-- sp_ChuyenDiChuHo
+-- Chuyển đi riêng chủ hộ (không kéo người phụ thuộc theo)
+-- Thường dùng khi chủ hộ chuyển cá nhân sang nơi khác,
+-- người phụ thuộc vẫn ở lại với hộ khẩu hiện tại.
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_ChuyenDiChuHo
+    @MaNK           INT,
+    @NguoiThucHien  NVARCHAR(100),
+    @GhiChu         NVARCHAR(500)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        UPDATE tblNhankhau
+        SET    TrangThai = N'Đã chuyển đi'
+        WHERE  MaNK = @MaNK;
+
+        INSERT INTO tblBienDong(MaNK, LoaiBienDong, NgayBienDong, NguoiThucHien, GhiChu)
+        VALUES(@MaNK, N'Chuyển đi', GETDATE(), @NguoiThucHien, @GhiChu);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+GO
+
+-- ============================================================
+-- sp_ChuyenDen  (MỚI)
+-- Đăng ký hộ khẩu mới khi chuyển đến, ghi biến động tự động
+-- Trả về @MaNK_Moi để C# thêm người phụ thuộc tiếp theo
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_ChuyenDen
+    @HoTen          NVARCHAR(100),
+    @NgaySinh       DATE,
+    @GioiTinh       BIT,
+    @NgheNghiep     NVARCHAR(100),
+    @NoiLamViec     NVARCHAR(200),
+    @DiaChi         NVARCHAR(200),
+    @DienThoai      NVARCHAR(15),
+    @MaTDP          INT,
+    @NgayDangKy     DATE,
+    @LyDo           NVARCHAR(500),
+    @NguoiThucHien  NVARCHAR(100),
+    @MaNK_Moi       INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        INSERT INTO tblNhankhau
+            (HoTen, NgaySinh, GioiTinh, NgheNghiep, NoiLamViec,
+             DiaChi, DienThoai, MaTDP, NgayDangKy)
+        VALUES
+            (@HoTen, @NgaySinh, @GioiTinh, @NgheNghiep, @NoiLamViec,
+             @DiaChi, @DienThoai, @MaTDP, @NgayDangKy);
+
+        SET @MaNK_Moi = SCOPE_IDENTITY();
+
+        INSERT INTO tblBienDong
+            (MaNK, LoaiBienDong, NgayBienDong, NguoiThucHien, GhiChu)
+        VALUES
+            (@MaNK_Moi, N'Chuyển đến', GETDATE(), @NguoiThucHien, @LyDo);
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+GO
+
+-- ============================================================
+-- sp_TachHo  (SỬA LẠI — thêm OUTPUT @MaNK_Moi)
+-- Tạo hộ mới từ thông tin chủ hộ mới rồi trả về MaNK mới
+-- Việc chuyển người phụ thuộc được xử lý từ C# (sp_ChuyenNguoiPhuThuocSangHo)
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_TachHo
+    @MaNK_Cu            INT,
+    @HoTen_Moi          NVARCHAR(100),
+    @NgaySinh_Moi       DATE,
+    @GioiTinh_Moi       BIT,
+    @NgheNghiep_Moi     NVARCHAR(100),
+    @DiaChi_Moi         NVARCHAR(200),
+    @DienThoai_Moi      VARCHAR(15),
+    @MaTDP              INT,
+    @NguoiThucHien      NVARCHAR(100),
+    @MaNK_Moi           INT OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        INSERT INTO tblNhankhau
+            (HoTen, NgaySinh, GioiTinh, NgheNghiep,
+             DiaChi, DienThoai, MaTDP)
+        VALUES
+            (@HoTen_Moi, @NgaySinh_Moi, @GioiTinh_Moi, @NgheNghiep_Moi,
+             @DiaChi_Moi, @DienThoai_Moi, @MaTDP);
+
+        SET @MaNK_Moi = SCOPE_IDENTITY();
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH
+END
+GO
+
+-- ============================================================
+-- sp_ChuyenNguoiPhuThuocSangHo  (MỚI)
+-- Di chuyển một người phụ thuộc từ hộ này sang hộ khác
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_ChuyenNguoiPhuThuocSangHo
+    @MaNPT      INT,
+    @MaNK_Moi   INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    UPDATE tblNguoi_phu_thuoc
+    SET    MaNK = @MaNK_Moi
+    WHERE  MaNPT = @MaNPT;
+END
+GO
