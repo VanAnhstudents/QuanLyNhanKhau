@@ -57,9 +57,9 @@
             this.lblLyDo = new System.Windows.Forms.Label();
             this.lblNguoiThucHien = new System.Windows.Forms.Label();
             this.txtLyDoChuyenDen = new System.Windows.Forms.TextBox();
-            this.txtNguoiThucHien = new System.Windows.Forms.TextBox();
             this.btnTaoMoi = new System.Windows.Forms.Button();
             this.btnHuy = new System.Windows.Forms.Button();
+            this.cbbNguoiThucHien = new System.Windows.Forms.ComboBox();
             this.grbThongTin.SuspendLayout();
             this.grbNguoiPhuThuoc.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -321,14 +321,6 @@
             this.txtLyDoChuyenDen.Size = new System.Drawing.Size(821, 20);
             this.txtLyDoChuyenDen.TabIndex = 4;
             // 
-            // txtNguoiThucHien
-            // 
-            this.txtNguoiThucHien.Location = new System.Drawing.Point(103, 309);
-            this.txtNguoiThucHien.Name = "txtNguoiThucHien";
-            this.txtNguoiThucHien.ReadOnly = true;
-            this.txtNguoiThucHien.Size = new System.Drawing.Size(373, 20);
-            this.txtNguoiThucHien.TabIndex = 5;
-            // 
             // btnTaoMoi
             // 
             this.btnTaoMoi.Location = new System.Drawing.Point(941, 277);
@@ -347,14 +339,22 @@
             this.btnHuy.Text = "Hủy";
             this.btnHuy.UseVisualStyleBackColor = true;
             // 
+            // cbbNguoiThucHien
+            // 
+            this.cbbNguoiThucHien.FormattingEnabled = true;
+            this.cbbNguoiThucHien.Location = new System.Drawing.Point(103, 308);
+            this.cbbNguoiThucHien.Name = "cbbNguoiThucHien";
+            this.cbbNguoiThucHien.Size = new System.Drawing.Size(340, 21);
+            this.cbbNguoiThucHien.TabIndex = 8;
+            // 
             // frmChuyenDen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1132, 338);
+            this.ClientSize = new System.Drawing.Size(1132, 436);
+            this.Controls.Add(this.cbbNguoiThucHien);
             this.Controls.Add(this.btnHuy);
             this.Controls.Add(this.btnTaoMoi);
-            this.Controls.Add(this.txtNguoiThucHien);
             this.Controls.Add(this.txtLyDoChuyenDen);
             this.Controls.Add(this.lblNguoiThucHien);
             this.Controls.Add(this.lblLyDo);
@@ -402,8 +402,8 @@
         private System.Windows.Forms.Label lblLyDo;
         private System.Windows.Forms.Label lblNguoiThucHien;
         private System.Windows.Forms.TextBox txtLyDoChuyenDen;
-        private System.Windows.Forms.TextBox txtNguoiThucHien;
         private System.Windows.Forms.Button btnTaoMoi;
         private System.Windows.Forms.Button btnHuy;
+        private System.Windows.Forms.ComboBox cbbNguoiThucHien;
     }
 }

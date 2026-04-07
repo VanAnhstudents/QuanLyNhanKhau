@@ -60,6 +60,53 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
         }
 
         // ─────────────────────────────────────────────────────────────
+        // NGƯỜI THỰC HIỆN — load HoTenCSKV + HoTenToTruong của TDP
+        // thuộc hộ đang làm việc
+        // ─────────────────────────────────────────────────────────────
+        private void LoadNguoiThucHien(int maNK)
+        {
+            cbbNguoiThucHien.Items.Clear();
+            try
+            {
+                using (SqlConnection conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    const string sql = @"
+                        SELECT t.HoTenCSKV, t.HoTenToTruong
+                        FROM   tblTodanpho  t
+                        JOIN   tblNhankhau  n ON n.MaTDP = t.MaTDP
+                        WHERE  n.MaNK = @MaNK";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@MaNK", maNK);
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            if (dr.Read())
+                            {
+                                string cskv = dr["HoTenCSKV"]?.ToString().Trim();
+                                string toTruong = dr["HoTenToTruong"]?.ToString().Trim();
+
+                                if (!string.IsNullOrEmpty(cskv))
+                                    cbbNguoiThucHien.Items.Add(cskv);
+                                if (!string.IsNullOrEmpty(toTruong) && toTruong != cskv)
+                                    cbbNguoiThucHien.Items.Add(toTruong);
+                            }
+                        }
+                    }
+                }
+
+                if (cbbNguoiThucHien.Items.Count > 0)
+                    cbbNguoiThucHien.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi tải người thực hiện: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // ─────────────────────────────────────────────────────────────
         // TÌM KIẾM
         // ─────────────────────────────────────────────────────────────
         private void btnTimKiem_Click(object sender, EventArgs e)
@@ -168,6 +215,9 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                         }
                     }
                 }
+
+                // Load CSKV / Tổ trưởng của TDP thuộc hộ này
+                LoadNguoiThucHien(maNK);
             }
             catch (Exception ex)
             {
@@ -209,9 +259,9 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            if (string.IsNullOrWhiteSpace(txtNguoiThucHien.Text))
+            if (string.IsNullOrWhiteSpace(cbbNguoiThucHien.Text))
             {
-                MessageBox.Show("Vui lòng nhập người thực hiện.", "Thông báo",
+                MessageBox.Show("Vui lòng chọn hoặc nhập người thực hiện.", "Thông báo",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -237,7 +287,7 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                         cmd.Parameters.AddWithValue("@MaNK", _currentMaNK);
                         cmd.Parameters.AddWithValue("@MaNPT",
                             _currentMaNPT == 0 ? (object)DBNull.Value : _currentMaNPT);
-                        cmd.Parameters.AddWithValue("@NguoiThucHien", txtNguoiThucHien.Text.Trim());
+                        cmd.Parameters.AddWithValue("@NguoiThucHien", cbbNguoiThucHien.Text.Trim());
                         cmd.Parameters.AddWithValue("@GhiChu", ghiChu);
                         cmd.ExecuteNonQuery();
                     }

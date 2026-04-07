@@ -23,6 +23,9 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             Load += frmChuyenDen_Load;
             btnTaoMoi.Click += btnTaoMoi_Click;
             btnHuy.Click += (s, e) => Close();
+
+            // Khi đổi tổ dân phố → cập nhật người thực hiện
+            cbbToDanPho.SelectedIndexChanged += cbbToDanPho_SelectedIndexChanged;
         }
 
         // ─────────────────────────────────────────────────────────────
@@ -53,6 +56,7 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                         cbbToDanPho.DisplayMember = "TenTDP";
                         cbbToDanPho.ValueMember = "MaTDP";
                         cbbToDanPho.DataSource = dt;
+                        // SelectedIndexChanged sẽ tự kích hoạt sau khi bind
                     }
                 }
             }
@@ -79,6 +83,59 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             NgaySinh.DataPropertyName = "NgaySinh";
             GioiTinh.DataPropertyName = "GioiTinh";
             QuanHe.DataPropertyName = "QuanHe";
+        }
+
+        // ─────────────────────────────────────────────────────────────
+        // NGƯỜI THỰC HIỆN — load HoTenCSKV + HoTenToTruong theo MaTDP
+        // ─────────────────────────────────────────────────────────────
+        private void cbbToDanPho_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cbbToDanPho.SelectedValue == null) return;
+
+            int maTDP = (int)cbbToDanPho.SelectedValue;
+            LoadNguoiThucHienByTDP(maTDP);
+        }
+
+        private void LoadNguoiThucHienByTDP(int maTDP)
+        {
+            cbbNguoiThucHien.Items.Clear();
+            try
+            {
+                using (SqlConnection conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    const string sql = @"
+                        SELECT HoTenCSKV, HoTenToTruong
+                        FROM   tblTodanpho
+                        WHERE  MaTDP = @MaTDP";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@MaTDP", maTDP);
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            if (dr.Read())
+                            {
+                                string cskv = dr["HoTenCSKV"]?.ToString().Trim();
+                                string toTruong = dr["HoTenToTruong"]?.ToString().Trim();
+
+                                if (!string.IsNullOrEmpty(cskv))
+                                    cbbNguoiThucHien.Items.Add(cskv);
+                                if (!string.IsNullOrEmpty(toTruong) && toTruong != cskv)
+                                    cbbNguoiThucHien.Items.Add(toTruong);
+                            }
+                        }
+                    }
+                }
+
+                if (cbbNguoiThucHien.Items.Count > 0)
+                    cbbNguoiThucHien.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi tải người thực hiện: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // ─────────────────────────────────────────────────────────────
@@ -139,7 +196,7 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                 cmd.Parameters.AddWithValue("@MaTDP", maTDP);
                 cmd.Parameters.AddWithValue("@NgayDangKy", dateTimeNgayDangKy.Value.Date);
                 cmd.Parameters.AddWithValue("@LyDo", txtLyDoChuyenDen.Text.Trim());
-                cmd.Parameters.AddWithValue("@NguoiThucHien", txtNguoiThucHien.Text.Trim());
+                cmd.Parameters.AddWithValue("@NguoiThucHien", cbbNguoiThucHien.Text.Trim());
 
                 SqlParameter outMaNK = new SqlParameter("@MaNK_Moi", SqlDbType.Int)
                 { Direction = ParameterDirection.Output };
@@ -205,11 +262,11 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
-            if (string.IsNullOrWhiteSpace(txtNguoiThucHien.Text))
+            if (string.IsNullOrWhiteSpace(cbbNguoiThucHien.Text))
             {
-                MessageBox.Show("Vui lòng nhập người thực hiện.", "Thiếu thông tin",
+                MessageBox.Show("Vui lòng chọn hoặc nhập người thực hiện.", "Thiếu thông tin",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNguoiThucHien.Focus();
+                cbbNguoiThucHien.Focus();
                 return false;
             }
             return true;
@@ -223,12 +280,12 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             txtDiaChi.Clear();
             txtSoDienThoai.Clear();
             txtLyDoChuyenDen.Clear();
-            txtNguoiThucHien.Clear();
             rbtnNam.Checked = false;
             rbtnNu.Checked = false;
             dateTimeNgaySinh.Value = DateTime.Today.AddYears(-20);
             dateTimeNgayDangKy.Value = DateTime.Today;
             _dependentsTable.Rows.Clear();
+            // cbbNguoiThucHien sẽ tự reset khi cbbToDanPho không đổi
         }
     }
 }
