@@ -30,8 +30,7 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             btnTachHo.Click += btnTachHo_Click;
             btnHuy.Click += (s, e) => Close();
             dgvThanhVien.CellValueChanged += dgvThanhVien_CellValueChanged;
-            dgvThanhVien.CurrentCellDirtyStateChanged
-                                             += dgvThanhVien_DirtyStateChanged;
+            dgvThanhVien.CurrentCellDirtyStateChanged += dgvThanhVien_DirtyStateChanged;
         }
 
         // ─────────────────────────────────────────────────────────────
@@ -95,6 +94,53 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             TrangThai.DataPropertyName = "TrangThai";
 
             dgvThanhVien.Columns.Insert(0, _chkColumn);
+        }
+
+        // ─────────────────────────────────────────────────────────────
+        // NGƯỜI THỰC HIỆN — load HoTenCSKV + HoTenToTruong của TDP
+        // thuộc hộ đang làm việc
+        // ─────────────────────────────────────────────────────────────
+        private void LoadNguoiThucHien(int maNK)
+        {
+            cbbNguoiThucHien.Items.Clear();
+            try
+            {
+                using (SqlConnection conn = DatabaseHelper.GetConnection())
+                {
+                    conn.Open();
+                    const string sql = @"
+                        SELECT t.HoTenCSKV, t.HoTenToTruong
+                        FROM   tblTodanpho  t
+                        JOIN   tblNhankhau  n ON n.MaTDP = t.MaTDP
+                        WHERE  n.MaNK = @MaNK";
+
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@MaNK", maNK);
+                        using (SqlDataReader dr = cmd.ExecuteReader())
+                        {
+                            if (dr.Read())
+                            {
+                                string cskv = dr["HoTenCSKV"]?.ToString().Trim();
+                                string toTruong = dr["HoTenToTruong"]?.ToString().Trim();
+
+                                if (!string.IsNullOrEmpty(cskv))
+                                    cbbNguoiThucHien.Items.Add(cskv);
+                                if (!string.IsNullOrEmpty(toTruong) && toTruong != cskv)
+                                    cbbNguoiThucHien.Items.Add(toTruong);
+                            }
+                        }
+                    }
+                }
+
+                if (cbbNguoiThucHien.Items.Count > 0)
+                    cbbNguoiThucHien.SelectedIndex = 0;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi tải người thực hiện: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // ─────────────────────────────────────────────────────────────
@@ -205,6 +251,8 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                     }
                 }
 
+                // Load CSKV / Tổ trưởng của TDP thuộc hộ này
+                LoadNguoiThucHien(maNK);
                 UpdateSummary();
             }
             catch (Exception ex)
@@ -320,12 +368,19 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                     MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+            if (string.IsNullOrWhiteSpace(cbbNguoiThucHien.Text))
+            {
+                MessageBox.Show("Vui lòng chọn hoặc nhập người thực hiện.", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             if (MessageBox.Show("Xác nhận tách hộ?", "Xác nhận",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
 
             var chuHo = _chuHoCandidates[cbbChuHo.SelectedIndex];
             int maTDP = (int)cbbToDanPho.SelectedValue;
+            string nguoiThucHien = cbbNguoiThucHien.Text.Trim();
 
             try
             {
@@ -336,9 +391,9 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                     {
                         try
                         {
-                            int maNKMoi = TaoHoMoi(conn, tran, chuHo, maTDP);
+                            int maNKMoi = TaoHoMoi(conn, tran, chuHo, maTDP, nguoiThucHien);
                             ChuyenThanhVienSangHoMoi(conn, tran, chuHo.MaNPT, maNKMoi);
-                            GhiBienDong(conn, tran, _currentMaNK, maNKMoi);
+                            GhiBienDong(conn, tran, _currentMaNK, maNKMoi, nguoiThucHien);
                             tran.Commit();
                         }
                         catch
@@ -362,9 +417,8 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
 
         // Tạo bản ghi chủ hộ mới trong tblNhankhau
         private int TaoHoMoi(SqlConnection conn, SqlTransaction tran,
-            (int MaNK, int MaNPT, string HoTen) chuHo, int maTDP)
+            (int MaNK, int MaNPT, string HoTen) chuHo, int maTDP, string nguoiThucHien)
         {
-            // Lấy thông tin người sẽ làm chủ hộ mới
             DataRow sourceRow = GetMemberDataRow(chuHo.MaNK, chuHo.MaNPT);
 
             using (SqlCommand cmd = new SqlCommand("sp_TachHo", conn, tran))
@@ -380,7 +434,7 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                 cmd.Parameters.AddWithValue("@DiaChi_Moi", txtDiaChi.Text.Trim());
                 cmd.Parameters.AddWithValue("@DienThoai_Moi", txtDienThoai.Text.Trim());
                 cmd.Parameters.AddWithValue("@MaTDP", maTDP);
-                cmd.Parameters.AddWithValue("@NguoiThucHien", "Hệ thống");
+                cmd.Parameters.AddWithValue("@NguoiThucHien", nguoiThucHien);
 
                 SqlParameter outMaNK = new SqlParameter("@MaNK_Moi", SqlDbType.Int)
                 { Direction = ParameterDirection.Output };
@@ -431,20 +485,21 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
         }
 
         private void GhiBienDong(SqlConnection conn, SqlTransaction tran,
-            int maNKCu, int maNKMoi)
+            int maNKCu, int maNKMoi, string nguoiThucHien)
         {
             string sql = @"
                 INSERT INTO tblBienDong(MaNK, LoaiBienDong, NgayBienDong, NguoiThucHien, GhiChu)
-                VALUES (@MaNKCu, N'Tách hộ', GETDATE(), N'Hệ thống',
+                VALUES (@MaNKCu,  N'Tách hộ', GETDATE(), @NguoiThucHien,
                         N'Tách ra hộ mới MaNK=' + CAST(@MaNKMoi AS NVARCHAR));
                 INSERT INTO tblBienDong(MaNK, LoaiBienDong, NgayBienDong, NguoiThucHien, GhiChu)
-                VALUES (@MaNKMoi, N'Tách hộ', GETDATE(), N'Hệ thống',
+                VALUES (@MaNKMoi, N'Tách hộ', GETDATE(), @NguoiThucHien,
                         N'Tách từ hộ MaNK=' + CAST(@MaNKCu AS NVARCHAR));";
 
             using (SqlCommand cmd = new SqlCommand(sql, conn, tran))
             {
                 cmd.Parameters.AddWithValue("@MaNKCu", maNKCu);
                 cmd.Parameters.AddWithValue("@MaNKMoi", maNKMoi);
+                cmd.Parameters.AddWithValue("@NguoiThucHien", nguoiThucHien);
                 cmd.ExecuteNonQuery();
             }
         }
