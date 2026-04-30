@@ -129,7 +129,7 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
                 };
 
                 DatabaseHelper.ExecuteNonQuery("sp_ThemNhanKhau", CommandType.StoredProcedure, parameters);
-                MessageBox.Show("Thêm chủ hộ thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show("Thêm chủ hộ thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 LoadData();
                 ClearInputs();
@@ -166,7 +166,7 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
                 };
 
                 DatabaseHelper.ExecuteNonQuery("sp_SuaNhanKhau", CommandType.StoredProcedure, parameters);
-                MessageBox.Show("Sửa thông tin thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show("Sửa thông tin thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 LoadData();
                 ClearInputs();
