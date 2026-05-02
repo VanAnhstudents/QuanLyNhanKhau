@@ -57,7 +57,7 @@
             // lblChuHo
             // 
             this.lblChuHo.AutoSize = true;
-            this.lblChuHo.Location = new System.Drawing.Point(8, 9);
+            this.lblChuHo.Location = new System.Drawing.Point(15, 17);
             this.lblChuHo.Name = "lblChuHo";
             this.lblChuHo.Size = new System.Drawing.Size(78, 16);
             this.lblChuHo.TabIndex = 0;
@@ -122,28 +122,29 @@
             this.cboChuHo.FormattingEnabled = true;
             this.cboChuHo.Location = new System.Drawing.Point(110, 12);
             this.cboChuHo.Name = "cboChuHo";
-            this.cboChuHo.Size = new System.Drawing.Size(121, 24);
+            this.cboChuHo.Size = new System.Drawing.Size(255, 24);
             this.cboChuHo.TabIndex = 9;
+            this.cboChuHo.SelectedIndexChanged += new System.EventHandler(this.cboChuHo_SelectedIndexChanged);
             // 
             // txtHoTenTre
             // 
             this.txtHoTenTre.Location = new System.Drawing.Point(114, 27);
             this.txtHoTenTre.Name = "txtHoTenTre";
-            this.txtHoTenTre.Size = new System.Drawing.Size(100, 22);
+            this.txtHoTenTre.Size = new System.Drawing.Size(213, 22);
             this.txtHoTenTre.TabIndex = 10;
             // 
             // txtNguoiThucHien
             // 
             this.txtNguoiThucHien.Location = new System.Drawing.Point(115, 27);
             this.txtNguoiThucHien.Name = "txtNguoiThucHien";
-            this.txtNguoiThucHien.Size = new System.Drawing.Size(100, 22);
+            this.txtNguoiThucHien.Size = new System.Drawing.Size(200, 22);
             this.txtNguoiThucHien.TabIndex = 11;
             // 
             // txtGhiChu
             // 
             this.txtGhiChu.Location = new System.Drawing.Point(115, 90);
             this.txtGhiChu.Name = "txtGhiChu";
-            this.txtGhiChu.Size = new System.Drawing.Size(100, 22);
+            this.txtGhiChu.Size = new System.Drawing.Size(200, 22);
             this.txtGhiChu.TabIndex = 12;
             // 
             // dtpNgaySinhTre
@@ -186,10 +187,11 @@
             // 
             this.btnDangKiKhaiSinh.Location = new System.Drawing.Point(11, 320);
             this.btnDangKiKhaiSinh.Name = "btnDangKiKhaiSinh";
-            this.btnDangKiKhaiSinh.Size = new System.Drawing.Size(75, 23);
+            this.btnDangKiKhaiSinh.Size = new System.Drawing.Size(172, 23);
             this.btnDangKiKhaiSinh.TabIndex = 18;
             this.btnDangKiKhaiSinh.Text = "Đăng Kí Khai Sinh";
             this.btnDangKiKhaiSinh.UseVisualStyleBackColor = true;
+            this.btnDangKiKhaiSinh.Click += new System.EventHandler(this.btnDangKiKhaiSinh_Click);
             // 
             // btnLamMoi
             // 
@@ -263,6 +265,7 @@
             this.Controls.Add(this.lblChuHo);
             this.Name = "frmKhaiSinh";
             this.Text = "Đăng Kí Trẻ Mới Sinh";
+            this.Load += new System.EventHandler(this.frmKhaiSinh_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvTrenewborn)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();

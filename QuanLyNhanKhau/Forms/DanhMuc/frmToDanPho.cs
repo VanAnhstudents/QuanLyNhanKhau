@@ -150,7 +150,7 @@ namespace QuanLyNhanKhau.Forms.DanhMuc
                     };
                     
                     DatabaseHelper.ExecuteNonQuery("sp_ThemTDP", CommandType.StoredProcedure, parameters);
-                    MessageBox.Show("Đã thêm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //MessageBox.Show("Đã thêm thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (rdoSua.Checked)
                 {
@@ -172,7 +172,7 @@ namespace QuanLyNhanKhau.Forms.DanhMuc
                     };
                     
                     DatabaseHelper.ExecuteNonQuery("sp_SuaTDP", CommandType.StoredProcedure, parameters);
-                    MessageBox.Show("Sửa thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    //MessageBox.Show("Sửa thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (rdoXoa.Checked)
                 {
