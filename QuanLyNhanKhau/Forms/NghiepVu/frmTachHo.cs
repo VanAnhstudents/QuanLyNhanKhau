@@ -18,7 +18,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
         private DataTable _membersTable;
         private DataGridViewCheckBoxColumn _chkColumn;
 
-        // Ánh xạ: index trong cbbChuHo → (MaNK, MaNPT, HoTen)
         private readonly List<(int MaNK, int MaNPT, string HoTen)> _chuHoCandidates
             = new List<(int, int, string)>();
 
@@ -33,9 +32,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             dgvThanhVien.CurrentCellDirtyStateChanged += dgvThanhVien_DirtyStateChanged;
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // LOAD
-        // ─────────────────────────────────────────────────────────────
         private void frmTachHo_Load(object sender, EventArgs e)
         {
             dateTimeNgayTach.Value = DateTime.Today;
@@ -77,7 +73,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             _membersTable.Columns.Add("QuanHe", typeof(string));
             _membersTable.Columns.Add("TrangThai", typeof(string));
 
-            // Cột checkbox "Chuyển sang hộ mới"
             _chkColumn = new DataGridViewCheckBoxColumn
             {
                 Name = "colChon",
@@ -96,10 +91,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             dgvThanhVien.Columns.Insert(0, _chkColumn);
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // NGƯỜI THỰC HIỆN — load HoTenCSKV + HoTenToTruong của TDP
-        // thuộc hộ đang làm việc
-        // ─────────────────────────────────────────────────────────────
         private void LoadNguoiThucHien(int maNK)
         {
             cbbNguoiThucHien.Items.Clear();
@@ -143,9 +134,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // TÌM KIẾM HỘ CŨ
-        // ─────────────────────────────────────────────────────────────
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             string tuKhoa = txtTimKiem.Text.Trim();
@@ -251,7 +239,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                     }
                 }
 
-                // Load CSKV / Tổ trưởng của TDP thuộc hộ này
                 LoadNguoiThucHien(maNK);
                 UpdateSummary();
             }
@@ -262,9 +249,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // CẬP NHẬT TÓM TẮT + CbbChuHo KHI TICK/UNTICK
-        // ─────────────────────────────────────────────────────────────
         private void dgvThanhVien_DirtyStateChanged(object sender, EventArgs e)
         {
             if (dgvThanhVien.IsCurrentCellDirty)
@@ -333,9 +317,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                 cbbChuHo.SelectedIndex = 0;
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // THỰC HIỆN TÁCH HỘ
-        // ─────────────────────────────────────────────────────────────
         private void btnTachHo_Click(object sender, EventArgs e)
         {
             if (_currentMaNK == 0)
@@ -415,7 +396,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // Tạo bản ghi chủ hộ mới trong tblNhankhau
         private int TaoHoMoi(SqlConnection conn, SqlTransaction tran,
             (int MaNK, int MaNPT, string HoTen) chuHo, int maTDP, string nguoiThucHien)
         {
@@ -445,7 +425,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // Chuyển các thành viên được tick (trừ chủ hộ mới đã được tạo riêng) sang hộ mới
         private void ChuyenThanhVienSangHoMoi(SqlConnection conn, SqlTransaction tran,
             int maNPT_ChuHoMoi, int maNKMoi)
         {
@@ -457,10 +436,8 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
 
                 int maNPT = (int)_membersTable.Rows[row.Index]["MaNPT"];
 
-                // Chủ hộ mới đã được tạo thành bản ghi tblNhankhau, không cần chuyển lại
                 if (maNPT == maNPT_ChuHoMoi) continue;
 
-                // Chủ hộ cũ (MaNPT = 0) không thể chuyển như người phụ thuộc
                 if (maNPT == 0) continue;
 
                 using (SqlCommand cmd = new SqlCommand("sp_ChuyenNguoiPhuThuocSangHo", conn, tran))
@@ -472,7 +449,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                 }
             }
 
-            // Xóa người phụ thuộc đã trở thành chủ hộ mới khỏi hộ cũ
             if (maNPT_ChuHoMoi > 0)
             {
                 using (SqlCommand cmd = new SqlCommand(
@@ -504,7 +480,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // Lấy dữ liệu gốc của một thành viên để dùng khi tạo chủ hộ mới
         private DataRow GetMemberDataRow(int maNK, int maNPT)
         {
             try

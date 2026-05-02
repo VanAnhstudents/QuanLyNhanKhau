@@ -28,9 +28,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             dataGridView1.CellClick += dataGridView1_CellClick;
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // LOAD
-        // ─────────────────────────────────────────────────────────────
         private void frmBaoTu_Load(object sender, EventArgs e)
         {
             dateTimeNgayTuVong.Value = DateTime.Today;
@@ -59,10 +56,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             TrangThai.DataPropertyName = "TrangThai";
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // NGƯỜI THỰC HIỆN — load HoTenCSKV + HoTenToTruong của TDP
-        // thuộc hộ đang làm việc
-        // ─────────────────────────────────────────────────────────────
         private void LoadNguoiThucHien(int maNK)
         {
             cbbNguoiThucHien.Items.Clear();
@@ -106,9 +99,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // TÌM KIẾM
-        // ─────────────────────────────────────────────────────────────
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             string tuKhoa = txtTimKiem.Text.Trim();
@@ -216,7 +206,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                     }
                 }
 
-                // Load CSKV / Tổ trưởng của TDP thuộc hộ này
                 LoadNguoiThucHien(maNK);
             }
             catch (Exception ex)
@@ -226,9 +215,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // CHỌN THÀNH VIÊN TRONG LƯỚI
-        // ─────────────────────────────────────────────────────────────
         private void dataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0 || e.RowIndex >= _membersTable.Rows.Count) return;
@@ -236,9 +222,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             _currentMaNPT = (int)_membersTable.Rows[e.RowIndex]["MaNPT"];
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // XÁC NHẬN BÁO TỬ
-        // ─────────────────────────────────────────────────────────────
         private void btnXacNhanBaoTu_Click(object sender, EventArgs e)
         {
             if (_currentMaNK == 0)

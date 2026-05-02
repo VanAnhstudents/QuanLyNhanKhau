@@ -29,9 +29,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             rbtnChuyenToanBo.CheckedChanged += rbtnChuyenToanBo_CheckedChanged;
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // LOAD
-        // ─────────────────────────────────────────────────────────────
         private void frmChuyenDi_Load(object sender, EventArgs e)
         {
             rbtnChuyenToanBo.Checked = true;
@@ -60,10 +57,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             TrangThai.DataPropertyName = "TrangThai";
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // NGƯỜI THỰC HIỆN — load HoTenCSKV + HoTenToTruong của TDP
-        // thuộc hộ đang làm việc
-        // ─────────────────────────────────────────────────────────────
         private void LoadNguoiThucHien(int maNK)
         {
             cbbNguoiThucHien.Items.Clear();
@@ -107,9 +100,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // TÌM KIẾM HỘ KHẨU
-        // ─────────────────────────────────────────────────────────────
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             string tuKhoa = txtTimKiem.Text.Trim();
@@ -183,9 +173,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             return 0;
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // TẢI THÀNH VIÊN HỘ
-        // ─────────────────────────────────────────────────────────────
         private void LoadHousehold(int maNK)
         {
             _currentMaNK = maNK;
@@ -226,9 +213,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // RADIO BUTTONS
-        // ─────────────────────────────────────────────────────────────
         private void rbtnCaNhan_CheckedChanged(object sender, EventArgs e)
         {
             if (rbtnCaNhan.Checked) AddCheckboxColumn();
@@ -268,9 +252,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // XÁC NHẬN CHUYỂN ĐI
-        // ─────────────────────────────────────────────────────────────
         private void btnXacNhan_Click(object sender, EventArgs e)
         {
             if (_currentMaNK == 0)
