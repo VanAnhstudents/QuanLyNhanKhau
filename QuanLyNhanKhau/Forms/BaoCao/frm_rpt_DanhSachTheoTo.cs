@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace QuanLyNhanKhau.Forms.BaoCao
 {
-    public partial class frmBaoCao : Form
+    public partial class frm_rpt_DanhSachTheoTo : Form
     {
-        public frmBaoCao()
+        public frm_rpt_DanhSachTheoTo()
         {
             InitializeComponent();
         }

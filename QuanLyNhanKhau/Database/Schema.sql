@@ -781,3 +781,49 @@ BEGIN
     WHERE  MaNPT = @MaNPT;
 END
 GO
+
+-- ============================================================
+-- sp_GetAllNhanKhauComboBox
+-- Lấy danh sách chủ hộ để bind vào ComboBox
+-- Dòng đầu tiên là placeholder "-- Vui lòng chọn chủ hộ --"
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_GetAllNhanKhauComboBox
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 0        AS MaNK,
+           N'-- Vui lòng chọn chủ hộ --' AS HoTen
+
+    UNION ALL
+
+    SELECT MaNK, HoTen
+    FROM   tblNhankhau
+    WHERE  TrangThai = N'Đang cư trú'   -- chỉ hiện chủ hộ đang cư trú
+    ORDER  BY HoTen;
+END
+GO
+
+-- ============================================================
+-- sp_GetNguoiPhuThuocByNK
+-- Lấy danh sách người phụ thuộc theo MaNK (chủ hộ)
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_GetNguoiPhuThuocByNK
+    @MaNK INT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT MaNPT,
+           MaNK,
+           HoTen,
+           NgaySinh,
+           GioiTinh,
+           NgheNghiep,
+           QuanHe,
+           TrangThai
+    FROM   tblNguoi_phu_thuoc
+    WHERE  MaNK = @MaNK
+    ORDER  BY MaNPT;
+END
+GO
