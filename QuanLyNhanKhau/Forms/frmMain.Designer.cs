@@ -42,10 +42,6 @@
             this.chuyểnĐiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.táchHộToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nhậpHộToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.traCứuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.theoTênToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.theoĐịaChỉToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.theoTổPhườngToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.báoCáoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dSTheoTổToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dSTheoPhườngToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +56,6 @@
             this.danhMụcToolStripMenuItem,
             this.nhânKhẩuToolStripMenuItem,
             this.nghiệpVụToolStripMenuItem,
-            this.traCứuToolStripMenuItem,
             this.báoCáoToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -81,14 +76,14 @@
             // phườngToolStripMenuItem
             // 
             this.phườngToolStripMenuItem.Name = "phườngToolStripMenuItem";
-            this.phườngToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.phườngToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.phườngToolStripMenuItem.Text = "Phường";
             this.phườngToolStripMenuItem.Click += new System.EventHandler(this.phườngToolStripMenuItem_Click);
             // 
             // tổDânPhốToolStripMenuItem
             // 
             this.tổDânPhốToolStripMenuItem.Name = "tổDânPhốToolStripMenuItem";
-            this.tổDânPhốToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.tổDânPhốToolStripMenuItem.Size = new System.Drawing.Size(135, 22);
             this.tổDânPhốToolStripMenuItem.Text = "Tổ dân phố";
             this.tổDânPhốToolStripMenuItem.Click += new System.EventHandler(this.tổDânPhốToolStripMenuItem_Click);
             // 
@@ -104,14 +99,14 @@
             // chủHộToolStripMenuItem
             // 
             this.chủHộToolStripMenuItem.Name = "chủHộToolStripMenuItem";
-            this.chủHộToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.chủHộToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.chủHộToolStripMenuItem.Text = "Chủ hộ";
             this.chủHộToolStripMenuItem.Click += new System.EventHandler(this.chủHộToolStripMenuItem_Click);
             // 
             // phụThuộcToolStripMenuItem
             // 
             this.phụThuộcToolStripMenuItem.Name = "phụThuộcToolStripMenuItem";
-            this.phụThuộcToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.phụThuộcToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
             this.phụThuộcToolStripMenuItem.Text = "Phụ thuộc";
             this.phụThuộcToolStripMenuItem.Click += new System.EventHandler(this.phụThuộcToolStripMenuItem_Click);
             // 
@@ -169,37 +164,6 @@
             this.nhậpHộToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.nhậpHộToolStripMenuItem.Text = "Nhập hộ";
             this.nhậpHộToolStripMenuItem.Click += new System.EventHandler(this.nhậpHộToolStripMenuItem_Click);
-            // 
-            // traCứuToolStripMenuItem
-            // 
-            this.traCứuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.theoTênToolStripMenuItem,
-            this.theoĐịaChỉToolStripMenuItem,
-            this.theoTổPhườngToolStripMenuItem});
-            this.traCứuToolStripMenuItem.Name = "traCứuToolStripMenuItem";
-            this.traCứuToolStripMenuItem.Size = new System.Drawing.Size(58, 20);
-            this.traCứuToolStripMenuItem.Text = "Tra cứu";
-            // 
-            // theoTênToolStripMenuItem
-            // 
-            this.theoTênToolStripMenuItem.Name = "theoTênToolStripMenuItem";
-            this.theoTênToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.theoTênToolStripMenuItem.Text = "Theo tên";
-            this.theoTênToolStripMenuItem.Click += new System.EventHandler(this.theoTênToolStripMenuItem_Click);
-            // 
-            // theoĐịaChỉToolStripMenuItem
-            // 
-            this.theoĐịaChỉToolStripMenuItem.Name = "theoĐịaChỉToolStripMenuItem";
-            this.theoĐịaChỉToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.theoĐịaChỉToolStripMenuItem.Text = "Theo địa chỉ";
-            this.theoĐịaChỉToolStripMenuItem.Click += new System.EventHandler(this.theoĐịaChỉToolStripMenuItem_Click);
-            // 
-            // theoTổPhườngToolStripMenuItem
-            // 
-            this.theoTổPhườngToolStripMenuItem.Name = "theoTổPhườngToolStripMenuItem";
-            this.theoTổPhườngToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.theoTổPhườngToolStripMenuItem.Text = "Theo tổ / phường";
-            this.theoTổPhườngToolStripMenuItem.Click += new System.EventHandler(this.theoTổPhườngToolStripMenuItem_Click);
             // 
             // báoCáoToolStripMenuItem
             // 
@@ -265,10 +229,6 @@
         private System.Windows.Forms.ToolStripMenuItem chuyểnĐiToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem táchHộToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nhậpHộToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem traCứuToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem theoTênToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem theoĐịaChỉToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem theoTổPhườngToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem báoCáoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dSTheoTổToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dSTheoPhườngToolStripMenuItem;

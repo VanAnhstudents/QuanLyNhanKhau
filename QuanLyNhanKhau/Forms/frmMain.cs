@@ -1,4 +1,5 @@
-﻿using QuanLyNhanKhau.Forms.DanhMuc;
+﻿using QuanLyNhanKhau.Forms.BaoCao;
+using QuanLyNhanKhau.Forms.DanhMuc;
 using QuanLyNhanKhau.Forms.NghiepVu;
 using QuanLyNhanKhau.Forms.NhanKhau;
 using System;
@@ -150,34 +151,41 @@ namespace QuanLyNhanKhau.Forms
             f.Activate();
         }
 
-        private void theoTênToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void theoĐịaChỉToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void theoTổPhườngToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void dSTheoTổToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            Form f = findOpendedForm("frm_rpt_DanhSachTheoTo");
+            if (f == null)
+            {
+                f = new frm_rpt_DanhSachTheoTo();
+                f.MdiParent = this;
+            } 
+            f.Show();
+            f.Activate();
         }
 
         private void dSTheoPhườngToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            Form f = findOpendedForm("frm_rpt_DanhSachTheoPhuong");
+            if (f == null)
+            {
+                f = new frm_rpt_DanhSachTheoPhuong();
+                f.MdiParent = this;
+            }
+            f.Show();
+            f.Activate();
         }
 
         private void biếnĐộngToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            Form f = findOpendedForm("frm_rpt_BienDong");
+            if (f == null)
+            {
+                f = new frm_rpt_BienDong();
+                f.MdiParent = this;
+            }
+            f.Show();
+            f.Activate();
         }
     }
 }

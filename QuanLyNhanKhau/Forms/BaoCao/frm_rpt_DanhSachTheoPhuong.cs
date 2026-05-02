@@ -8,11 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace QuanLyNhanKhau.Forms.TraCuu
+namespace QuanLyNhanKhau.Forms.BaoCao
 {
-    public partial class frmTraCuu : Form
+    public partial class frm_rpt_DanhSachTheoPhuong : Form
     {
-        public frmTraCuu()
+        public frm_rpt_DanhSachTheoPhuong()
         {
             InitializeComponent();
         }

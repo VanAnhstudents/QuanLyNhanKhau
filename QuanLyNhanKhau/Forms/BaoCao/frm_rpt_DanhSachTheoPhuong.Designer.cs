@@ -1,6 +1,6 @@
-﻿namespace QuanLyNhanKhau.Forms.TraCuu
+﻿namespace QuanLyNhanKhau.Forms.BaoCao
 {
-    partial class frmTraCuu
+    partial class frm_rpt_DanhSachTheoPhuong
     {
         /// <summary>
         /// Required designer variable.
@@ -31,7 +31,7 @@
             this.components = new System.ComponentModel.Container();
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Text = "frmTraCuu";
+            this.Text = "frm_rpt_DanhSachTheoPhuong";
         }
 
         #endregion
