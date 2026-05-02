@@ -14,7 +14,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
 {
     public partial class frmChuyenDen : Form
     {
-        // Bảng lưu người phụ thuộc nhập trên grid trước khi lưu DB
         private DataTable _dependentsTable;
 
         public frmChuyenDen()
@@ -24,13 +23,9 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             btnTaoMoi.Click += btnTaoMoi_Click;
             btnHuy.Click += (s, e) => Close();
 
-            // Khi đổi tổ dân phố → cập nhật người thực hiện
             cbbToDanPho.SelectedIndexChanged += cbbToDanPho_SelectedIndexChanged;
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // LOAD
-        // ─────────────────────────────────────────────────────────────
         private void frmChuyenDen_Load(object sender, EventArgs e)
         {
             dateTimeNgaySinh.Value = DateTime.Today.AddYears(-20);
@@ -56,7 +51,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                         cbbToDanPho.DisplayMember = "TenTDP";
                         cbbToDanPho.ValueMember = "MaTDP";
                         cbbToDanPho.DataSource = dt;
-                        // SelectedIndexChanged sẽ tự kích hoạt sau khi bind
                     }
                 }
             }
@@ -85,9 +79,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             QuanHe.DataPropertyName = "QuanHe";
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // NGƯỜI THỰC HIỆN — load HoTenCSKV + HoTenToTruong theo MaTDP
-        // ─────────────────────────────────────────────────────────────
         private void cbbToDanPho_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cbbToDanPho.SelectedValue == null) return;
@@ -138,9 +129,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // TẠO NHÂN KHẨU MỚI (CHUYỂN ĐẾN)
-        // ─────────────────────────────────────────────────────────────
         private void btnTaoMoi_Click(object sender, EventArgs e)
         {
             if (!ValidateInput()) return;
@@ -209,7 +197,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
 
         private void AddNguoiPhuThuoc(SqlConnection conn, int maNK, DataRow row)
         {
-            // Xử lý ngày sinh – người dùng nhập chuỗi dd/MM/yyyy hoặc để trống
             DateTime ngaySinh = DateTime.Today;
             if (!string.IsNullOrWhiteSpace(row["NgaySinh"]?.ToString()))
                 DateTime.TryParseExact(row["NgaySinh"].ToString(), "dd/MM/yyyy",
@@ -231,9 +218,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             }
         }
 
-        // ─────────────────────────────────────────────────────────────
-        // VALIDATION
-        // ─────────────────────────────────────────────────────────────
         private bool ValidateInput()
         {
             if (string.IsNullOrWhiteSpace(txtHoTen.Text))
@@ -285,7 +269,6 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
             dateTimeNgaySinh.Value = DateTime.Today.AddYears(-20);
             dateTimeNgayDangKy.Value = DateTime.Today;
             _dependentsTable.Rows.Clear();
-            // cbbNguoiThucHien sẽ tự reset khi cbbToDanPho không đổi
         }
     }
 }
