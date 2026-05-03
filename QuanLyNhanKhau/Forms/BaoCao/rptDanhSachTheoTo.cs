@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using QuanLyNhanKhau.Reports;
+using System;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace QuanLyNhanKhau.Forms.BaoCao
@@ -15,6 +12,23 @@ namespace QuanLyNhanKhau.Forms.BaoCao
         public rptDanhSachTheoTo()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
+        }
+
+        public void LoadReport(DataTable dt, string tenPhuong, string tenTDP)
+        {
+            var report = new DanhSachTheoTo();
+
+            report.SetDataSource(dt);
+
+            rpt_DanhSachTheoTo.ReportSource = report;
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            base.OnFormClosed(e);
+            if (rpt_DanhSachTheoTo.ReportSource is ReportDocument rd)
+                rd.Close();
         }
     }
 }

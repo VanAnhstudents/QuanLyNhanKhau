@@ -870,3 +870,77 @@ BEGIN
     ORDER BY bd.LoaiBienDong, bd.NgayBienDong;
 END
 GO
+
+CREATE OR ALTER PROCEDURE sp_GetAllPhuongForReport
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Dòng đầu là placeholder "Tất cả phường"
+    SELECT 0 AS MaPhuong, N'-- Tất cả phường --' AS TenPhuong
+    UNION ALL
+    SELECT MaPhuong, TenPhuong
+    FROM   tblPhuong
+    ORDER  BY MaPhuong;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_GetTDPByPhuong
+    @MaPhuong INT   -- 0 = tất cả phường
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 0 AS MaTDP, N'-- Tất cả tổ dân phố --' AS TenTDP
+
+    UNION ALL
+
+    SELECT
+        MaTDP,
+        TenTDP
+    FROM tblTodanpho
+    WHERE (@MaPhuong = 0 OR MaPhuong = @MaPhuong)
+
+    ORDER BY MaTDP;
+END
+GO
+
+CREATE OR ALTER PROCEDURE sp_BaoCaoDanhSachTheoTo
+    @MaPhuong   INT = 0,    -- 0 = tất cả phường
+    @MaTDP      INT = 0     -- 0 = tất cả tổ dân phố
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        -- Dùng cho Group 1 (Crystal Report group theo TenPhuong)
+        p.MaPhuong,
+        p.TenPhuong,
+
+        -- Dùng cho Group 2 (Crystal Report group theo TenTDP)
+        t.MaTDP,
+        t.TenTDP,
+        t.HoTenCSKV,
+
+        -- Dùng cho Details
+        n.MaNK,
+        n.HoTen,
+        CONVERT(VARCHAR(10), n.NgaySinh, 103) AS NgaySinh,  -- dd/MM/yyyy
+        CASE n.GioiTinh WHEN 1 THEN N'Nam' ELSE N'Nữ' END   AS GioiTinh,
+        ISNULL(n.NgheNghiep, N'')                            AS NgheNghiep,
+        n.DiaChi,
+        n.TrangThai
+
+    FROM tblNhankhau   n
+    JOIN tblTodanpho   t ON n.MaTDP    = t.MaTDP
+    JOIN tblPhuong     p ON t.MaPhuong = p.MaPhuong
+
+    WHERE
+        (@MaPhuong = 0 OR p.MaPhuong = @MaPhuong)
+        AND (@MaTDP = 0 OR t.MaTDP   = @MaTDP)
+
+    ORDER BY
+        p.TenPhuong,
+        t.TenTDP,
+        n.HoTen;
+END
+GO

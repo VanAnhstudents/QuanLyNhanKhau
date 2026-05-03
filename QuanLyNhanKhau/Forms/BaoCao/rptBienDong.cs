@@ -1,5 +1,4 @@
-﻿// rptBienDong.cs — phiên bản CUỐI, dùng index để tránh lỗi tên parameter
-using CrystalDecisions.CrystalReports.Engine;
+﻿using CrystalDecisions.CrystalReports.Engine;
 using CrystalDecisions.Shared;
 using QuanLyNhanKhau.Reports;
 using System;
@@ -20,11 +19,8 @@ namespace QuanLyNhanKhau.Forms.BaoCao
         {
             var report = new BienDong();
 
-            // 1. Set data source TRƯỚC
             report.SetDataSource(dt);
 
-            // 2. Set parameter bằng index (tránh lỗi tên không khớp)
-            //    Index 0 = TuNgay (FromDate), Index 1 = DenNgay (ToDate)
             ParameterDiscreteValue pFrom = new ParameterDiscreteValue();
             pFrom.Value = fromDate;
             report.DataDefinition.ParameterFields[0].CurrentValues.Clear();
