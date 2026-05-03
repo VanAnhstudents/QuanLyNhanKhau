@@ -200,8 +200,20 @@
     <EmbeddedResource Include="Forms\BaoCao\frm_rpt_BienDong.resx">
       <DependentUpon>frm_rpt_BienDong.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BaoCao\frm_rpt_DanhSachTheoPhuong.resx">
+      <DependentUpon>frm_rpt_DanhSachTheoPhuong.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BaoCao\frm_rpt_DanhSachTheoTo.resx">
+      <DependentUpon>frm_rpt_DanhSachTheoTo.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\BaoCao\rptBienDong.resx">
       <DependentUpon>rptBienDong.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BaoCao\rptDanhSachTheoPhuong.resx">
+      <DependentUpon>rptDanhSachTheoPhuong.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BaoCao\rptDanhSachTheoTo.resx">
+      <DependentUpon>rptDanhSachTheoTo.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\DanhMuc\frmPhuong.resx">
       <DependentUpon>frmPhuong.cs</DependentUpon>
