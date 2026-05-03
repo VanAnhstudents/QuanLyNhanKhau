@@ -16,14 +16,14 @@ namespace QuanLyNhanKhau.Reports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class rptDanhSachTheoTo : ReportClass {
+    public class DanhSachTheoTo : ReportClass {
         
-        public rptDanhSachTheoTo() {
+        public DanhSachTheoTo() {
         }
         
         public override string ResourceName {
             get {
-                return "rptDanhSachTheoTo.rpt";
+                return "DanhSachTheoTo.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace QuanLyNhanKhau.Reports {
         
         public override string FullResourceName {
             get {
-                return "QuanLyNhanKhau.Reports.rptDanhSachTheoTo.rpt";
+                return "QuanLyNhanKhau.Reports.DanhSachTheoTo.rpt";
             }
             set {
                 // Do nothing
@@ -90,9 +90,9 @@ namespace QuanLyNhanKhau.Reports {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedrptDanhSachTheoTo : Component, ICachedReport {
+    public class CachedDanhSachTheoTo : Component, ICachedReport {
         
-        public CachedrptDanhSachTheoTo() {
+        public CachedDanhSachTheoTo() {
         }
         
         [Browsable(false)]
@@ -129,7 +129,7 @@ namespace QuanLyNhanKhau.Reports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            rptDanhSachTheoTo rpt = new rptDanhSachTheoTo();
+            DanhSachTheoTo rpt = new DanhSachTheoTo();
             rpt.Site = this.Site;
             return rpt;
         }

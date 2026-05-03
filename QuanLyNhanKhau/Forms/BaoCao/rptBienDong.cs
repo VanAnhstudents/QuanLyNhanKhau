@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿// rptBienDong.cs — phiên bản CUỐI, dùng index để tránh lỗi tên parameter
+using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using QuanLyNhanKhau.Reports;
+using System;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace QuanLyNhanKhau.Forms.BaoCao
@@ -15,6 +13,36 @@ namespace QuanLyNhanKhau.Forms.BaoCao
         public rptBienDong()
         {
             InitializeComponent();
+            this.WindowState = FormWindowState.Maximized;
+        }
+
+        public void LoadReport(DataTable dt, DateTime fromDate, DateTime toDate)
+        {
+            var report = new BienDong();
+
+            // 1. Set data source TRƯỚC
+            report.SetDataSource(dt);
+
+            // 2. Set parameter bằng index (tránh lỗi tên không khớp)
+            //    Index 0 = TuNgay (FromDate), Index 1 = DenNgay (ToDate)
+            ParameterDiscreteValue pFrom = new ParameterDiscreteValue();
+            pFrom.Value = fromDate;
+            report.DataDefinition.ParameterFields[0].CurrentValues.Clear();
+            report.DataDefinition.ParameterFields[0].CurrentValues.Add(pFrom);
+
+            ParameterDiscreteValue pTo = new ParameterDiscreteValue();
+            pTo.Value = toDate;
+            report.DataDefinition.ParameterFields[1].CurrentValues.Clear();
+            report.DataDefinition.ParameterFields[1].CurrentValues.Add(pTo);
+
+            rpt_BienDong.ReportSource = report;
+        }
+
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            base.OnFormClosed(e);
+            if (rpt_BienDong.ReportSource is ReportDocument rd)
+                rd.Close();
         }
     }
 }

@@ -827,3 +827,46 @@ BEGIN
     ORDER  BY MaNPT;
 END
 GO
+
+-- Crystal Report
+-- rptBienDong
+CREATE OR ALTER PROCEDURE sp_BaoCaoBienDong
+    @FromDate   DATE,
+    @ToDate     DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        @FromDate AS TuNgay,
+        @ToDate AS DenNgay,
+        bd.MaBD,
+        bd.LoaiBienDong,
+        bd.NgayBienDong,
+        bd.GhiChu,
+        bd.NguoiThucHien,
+        bd.MaNPT,
+
+        -- Lấy HoTen: ưu tiên người phụ thuộc nếu MaNPT không NULL
+        CASE 
+            WHEN bd.MaNPT IS NOT NULL THEN pt.HoTen
+            ELSE n.HoTen
+        END AS HoTen,
+
+        -- Phục vụ Group Footer & Report Footer: đếm từng loại
+        CASE WHEN bd.LoaiBienDong = N'Khai sinh'   THEN 1 ELSE 0 END AS IsKhaiSinh,
+        CASE WHEN bd.LoaiBienDong = N'Báo tử'      THEN 1 ELSE 0 END AS IsBaoTu,
+        CASE WHEN bd.LoaiBienDong = N'Chuyển đi'   THEN 1 ELSE 0 END AS IsChuyenDi,
+        CASE WHEN bd.LoaiBienDong = N'Chuyển đến'  THEN 1 ELSE 0 END AS IsChuyenDen,
+        CASE WHEN bd.LoaiBienDong = N'Tách hộ'     THEN 1 ELSE 0 END AS IsTachHo,
+        CASE WHEN bd.LoaiBienDong = N'Nhập hộ'     THEN 1 ELSE 0 END AS IsNhapHo
+
+    FROM tblBienDong bd
+    LEFT JOIN tblNhankhau        n  ON bd.MaNK  = n.MaNK
+    LEFT JOIN tblNguoi_phu_thuoc pt ON bd.MaNPT = pt.MaNPT
+
+    WHERE bd.NgayBienDong BETWEEN @FromDate AND @ToDate
+
+    ORDER BY bd.LoaiBienDong, bd.NgayBienDong;
+END
+GO
