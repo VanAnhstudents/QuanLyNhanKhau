@@ -185,16 +185,16 @@
       <DependentUpon>BienDong.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\DanhSachTheoPhuong.cs">
+    <Compile Include="Reports\DSTheoPhuong.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DanhSachTheoPhuong.rpt</DependentUpon>
+      <DependentUpon>DSTheoPhuong.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\DanhSachTheoTo.cs">
+    <Compile Include="Reports\DSTheoTo.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DanhSachTheoTo.rpt</DependentUpon>
+      <DependentUpon>DSTheoTo.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <EmbeddedResource Include="Forms\BaoCao\frm_rpt_BienDong.resx">
@@ -261,13 +261,14 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>BienDong.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\DanhSachTheoPhuong.rpt">
+    <EmbeddedResource Include="Reports\DSTheoPhuong.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>DanhSachTheoPhuong.cs</LastGenOutput>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <LastGenOutput>DSTheoPhuong.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\DanhSachTheoTo.rpt">
+    <EmbeddedResource Include="Reports\DSTheoTo.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>DanhSachTheoTo.cs</LastGenOutput>
+      <LastGenOutput>DSTheoTo.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

@@ -17,7 +17,7 @@ namespace QuanLyNhanKhau.Forms.BaoCao
 
         public void LoadReport(DataTable dt, string tenPhuong, string tenTDP)
         {
-            var report = new DanhSachTheoTo();
+            var report = new DSTheoTo();
 
             report.SetDataSource(dt);
 
