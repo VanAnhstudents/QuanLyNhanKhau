@@ -16,14 +16,14 @@ namespace QuanLyNhanKhau.Reports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class DanhSachTheoPhuong : ReportClass {
+    public class DSTheoPhuong : ReportClass {
         
-        public DanhSachTheoPhuong() {
+        public DSTheoPhuong() {
         }
         
         public override string ResourceName {
             get {
-                return "DanhSachTheoPhuong.rpt";
+                return "DSTheoPhuong.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace QuanLyNhanKhau.Reports {
         
         public override string FullResourceName {
             get {
-                return "QuanLyNhanKhau.Reports.DanhSachTheoPhuong.rpt";
+                return "QuanLyNhanKhau.Reports.DSTheoPhuong.rpt";
             }
             set {
                 // Do nothing
@@ -87,12 +87,20 @@ namespace QuanLyNhanKhau.Reports {
                 return this.ReportDefinition.Sections[4];
             }
         }
+        
+        [Browsable(false)]
+        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
+        public CrystalDecisions.Shared.IParameterField Parameter_MaPhuong {
+            get {
+                return this.DataDefinition.ParameterFields[0];
+            }
+        }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedDanhSachTheoPhuong : Component, ICachedReport {
+    public class CachedDSTheoPhuong : Component, ICachedReport {
         
-        public CachedDanhSachTheoPhuong() {
+        public CachedDSTheoPhuong() {
         }
         
         [Browsable(false)]
@@ -129,7 +137,7 @@ namespace QuanLyNhanKhau.Reports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            DanhSachTheoPhuong rpt = new DanhSachTheoPhuong();
+            DSTheoPhuong rpt = new DSTheoPhuong();
             rpt.Site = this.Site;
             return rpt;
         }

@@ -944,3 +944,77 @@ BEGIN
         n.HoTen;
 END
 GO
+
+-- ============================================================
+-- SP GỘP: sp_DanhSachNhanKhauTheoPhuong
+-- Trả về 1 result-set duy nhất chứa đủ dữ liệu cho Crystal Report:
+--   - Cột nhóm / header : TenPhuong, DiaChiTruSo
+--   - Cột chi tiết       : danh sách nhân khẩu
+--   - Cột thống kê footer: TongNhanKhau, TongToDP,
+--                          SoDangCuTru, SoChuyenDi, SoBaoTu
+-- Crystal Report dùng Running Total hoặc Summary field trên
+-- các cột Is* để tính thống kê mà không cần SP thứ hai.
+-- ============================================================
+CREATE OR ALTER PROCEDURE sp_DanhSachNhanKhauTheoPhuong
+    @MaPhuong INT   -- 0 = tất cả phường
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- ── CTE tính thống kê theo phường ───────────────────────
+    WITH CteThongKe AS (
+        SELECT
+            p2.MaPhuong,
+            COUNT(DISTINCT n2.MaNK)                                           AS TongNhanKhau,
+            COUNT(DISTINCT t2.MaTDP)                                          AS TongToDP,
+            SUM(CASE WHEN n2.TrangThai = N'Đang cư trú'  THEN 1 ELSE 0 END)  AS SoDangCuTru,
+            SUM(CASE WHEN n2.TrangThai = N'Đã chuyển đi' THEN 1 ELSE 0 END)  AS SoChuyenDi,
+            SUM(CASE WHEN n2.TrangThai = N'Đã báo tử'    THEN 1 ELSE 0 END)  AS SoBaoTu
+        FROM tblNhankhau   n2
+        JOIN tblTodanpho   t2 ON n2.MaTDP    = t2.MaTDP
+        JOIN tblPhuong     p2 ON t2.MaPhuong = p2.MaPhuong
+        WHERE (@MaPhuong = 0 OR p2.MaPhuong = @MaPhuong)
+        GROUP BY p2.MaPhuong
+    )
+
+    SELECT
+        -- ── Thông tin phường (Report Header / Group Header) ──
+        p.MaPhuong,
+        p.TenPhuong,
+        p.TruSo                                                         AS DiaChiTruSo,
+
+        -- ── Thông tin tổ dân phố (Group Header 2) ───────────
+        t.MaTDP,
+        t.TenTDP,
+
+        -- ── Thông tin nhân khẩu (Details) ───────────────────
+        n.MaNK,
+        n.HoTen,
+        CONVERT(VARCHAR(10), n.NgaySinh, 103)               AS NgaySinh,    -- dd/MM/yyyy
+        CASE n.GioiTinh WHEN 1 THEN N'Nam' ELSE N'Nữ' END  AS GioiTinh,
+        ISNULL(n.NgheNghiep, N'')                           AS NgheNghiep,
+        n.DiaChi,
+        n.TrangThai,
+
+        -- ── Thống kê (Report Footer) — lặp lại mỗi dòng ────
+        -- Crystal Report dùng Maximum() hoặc First() trên các
+        -- cột này trong Report Footer để lấy giá trị đúng.
+        tk.TongNhanKhau,
+        tk.TongToDP,
+        tk.SoDangCuTru,
+        tk.SoChuyenDi,
+        tk.SoBaoTu
+
+    FROM tblNhankhau   n
+    JOIN tblTodanpho   t  ON n.MaTDP    = t.MaTDP
+    JOIN tblPhuong     p  ON t.MaPhuong = p.MaPhuong
+    JOIN CteThongKe    tk ON p.MaPhuong = tk.MaPhuong
+
+    WHERE (@MaPhuong = 0 OR p.MaPhuong = @MaPhuong)
+
+    ORDER BY
+        p.TenPhuong,
+        t.TenTDP,
+        n.HoTen;
+END
+GO
