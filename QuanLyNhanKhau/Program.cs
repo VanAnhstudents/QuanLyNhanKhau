@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using QuanLyNhanKhau.Forms;
+using QuanLyNhanKhau.Forms.NghiepVu;
 
 namespace QuanLyNhanKhau
 {
@@ -17,7 +18,7 @@ namespace QuanLyNhanKhau
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmMain());
+            Application.Run(new frmLogin());
         }
     }
 }

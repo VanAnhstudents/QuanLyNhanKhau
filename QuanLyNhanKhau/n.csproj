@@ -153,6 +153,12 @@
     <Compile Include="Forms\NghiepVu\frmKhaiSinh.Designer.cs">
       <DependentUpon>frmKhaiSinh.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\NghiepVu\frmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NghiepVu\frmLogin.Designer.cs">
+      <DependentUpon>frmLogin.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\NghiepVu\frmNhapHo.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -226,6 +232,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NghiepVu\frmKhaiSinh.resx">
       <DependentUpon>frmKhaiSinh.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NghiepVu\frmLogin.resx">
+      <DependentUpon>frmLogin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NhanKhau\frmNguoiPhuThuoc.resx">
       <DependentUpon>frmNguoiPhuThuoc.cs</DependentUpon>

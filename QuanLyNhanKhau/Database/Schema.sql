@@ -107,6 +107,16 @@ CREATE TABLE tblBienDong (
 GO
 
 -- ============================================================
+-- BẢNG 6: tblTaiKhoan
+-- Đăng nhập
+-- ============================================================
+CREATE TABLE tblTaiKhoan(
+    TenDangNhap NVARCHAR(50) PRIMARY KEY,
+    MatKhau NVARCHAR(100) NOT NULL
+);
+
+
+-- ============================================================
 -- STORED PROCEDURES — PHƯỜNG
 -- ============================================================
 CREATE OR ALTER PROCEDURE sp_ThemPhuong

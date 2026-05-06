@@ -187,5 +187,10 @@ namespace QuanLyNhanKhau.Forms
             f.Show();
             f.Activate();
         }
+
+        private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }
