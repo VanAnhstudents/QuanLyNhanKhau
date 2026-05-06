@@ -14,10 +14,15 @@ GO
 -- Lưu thông tin các phường trong quận
 -- ============================================================
 CREATE TABLE tblPhuong (
-    MaPhuong    INT             PRIMARY KEY IDENTITY(1,1),
-    TenPhuong   NVARCHAR(100)   NOT NULL,
-    DienThoai   NVARCHAR(15),
-    TruSo       NVARCHAR(255)
+    MaPhuong                INT             PRIMARY KEY IDENTITY(1,1),
+    TenPhuong               NVARCHAR(100)   NOT NULL,
+    DienThoai               NVARCHAR(15),
+    TruSo                   NVARCHAR(255),
+    -- Audit metadata (Cách A)
+    CreatedByTenDangNhap    NVARCHAR(50)    NULL,
+    UpdatedByTenDangNhap    NVARCHAR(50)    NULL,
+    CreatedAt               DATETIME2       NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt               DATETIME2       NULL
 );
 GO
 
@@ -26,13 +31,18 @@ GO
 -- Lưu thông tin tổ dân phố, CSKV, tổ trưởng
 -- ============================================================
 CREATE TABLE tblTodanpho (
-    MaTDP               INT             PRIMARY KEY IDENTITY(1,1),
-    TenTDP              NVARCHAR(100)   NOT NULL,
-    MaPhuong            INT             NOT NULL,
-    HoTenCSKV          NVARCHAR(100),
-    DienThoaiCSKV      NVARCHAR(15),
-    HoTenToTruong      NVARCHAR(100),
-    DienThoaiToTruong  NVARCHAR(15),
+    MaTDP                   INT             PRIMARY KEY IDENTITY(1,1),
+    TenTDP                  NVARCHAR(100)   NOT NULL,
+    MaPhuong                INT             NOT NULL,
+    HoTenCSKV              NVARCHAR(100),
+    DienThoaiCSKV          NVARCHAR(15),
+    HoTenToTruong          NVARCHAR(100),
+    DienThoaiToTruong      NVARCHAR(15),
+    -- Audit metadata (Cách A)
+    CreatedByTenDangNhap    NVARCHAR(50)    NULL,
+    UpdatedByTenDangNhap    NVARCHAR(50)    NULL,
+    CreatedAt               DATETIME2       NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt               DATETIME2       NULL,
     CONSTRAINT FK_TDP_Phuong FOREIGN KEY (MaPhuong)
         REFERENCES tblPhuong(MaPhuong)
         ON UPDATE CASCADE
@@ -58,6 +68,11 @@ CREATE TABLE tblNhankhau (
                 DEFAULT N'Đang cư trú',     -- Đang cư trú | Đã chuyển đi | Đã báo tử | Đã nhập hộ
     NgayDangKy  DATE            NOT NULL
                 DEFAULT GETDATE(),
+    -- Audit metadata (Cách A)
+    CreatedByTenDangNhap    NVARCHAR(50)    NULL,
+    UpdatedByTenDangNhap    NVARCHAR(50)    NULL,
+    CreatedAt               DATETIME2       NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt               DATETIME2       NULL,
     CONSTRAINT FK_NK_TDP FOREIGN KEY (MaTDP)
         REFERENCES tblTodanpho(MaTDP)
         ON UPDATE CASCADE
@@ -79,6 +94,11 @@ CREATE TABLE tblNguoi_phu_thuoc (
     QuanHe      NVARCHAR(50)    NOT NULL,   -- Vợ | Chồng | Con | Cha | Mẹ | Anh | Chị | Em
     TrangThai   NVARCHAR(50)    NOT NULL
                 DEFAULT N'Đang cư trú',     -- Đang cư trú | Đã chuyển đi | Đã báo tử
+    -- Audit metadata (Cách A)
+    CreatedByTenDangNhap    NVARCHAR(50)    NULL,
+    UpdatedByTenDangNhap    NVARCHAR(50)    NULL,
+    CreatedAt               DATETIME2       NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt               DATETIME2       NULL,
     CONSTRAINT FK_NPT_NK FOREIGN KEY (MaNK)
         REFERENCES tblNhankhau(MaNK)
         ON UPDATE CASCADE
@@ -99,6 +119,11 @@ CREATE TABLE tblBienDong (
     NgayBienDong    DATE            NOT NULL DEFAULT GETDATE(),
     NguoiThucHien   NVARCHAR(100),
     GhiChu          NVARCHAR(500),
+    -- Audit metadata (Cách A)
+    CreatedByTenDangNhap    NVARCHAR(50)    NULL,
+    UpdatedByTenDangNhap    NVARCHAR(50)    NULL,
+    CreatedAt               DATETIME2       NULL DEFAULT SYSUTCDATETIME(),
+    UpdatedAt               DATETIME2       NULL,
     CONSTRAINT FK_BD_NK FOREIGN KEY (MaNK)
         REFERENCES tblNhankhau(MaNK)
         ON UPDATE CASCADE
@@ -114,6 +139,266 @@ CREATE TABLE tblTaiKhoan(
     TenDangNhap NVARCHAR(50) PRIMARY KEY,
     MatKhau NVARCHAR(100) NOT NULL
 );
+GO
+
+-- ============================================================
+-- BẢNG 7: dbo.AuditLog
+-- Ghi nhận toàn bộ thao tác INSERT/UPDATE/DELETE trên các
+-- bảng nghiệp vụ (trừ tblTaiKhoan).
+-- Dùng chung cho cả Cách A (app-driven) và Cách B (trigger-driven).
+-- ============================================================
+CREATE TABLE dbo.AuditLog (
+    AuditLogId          BIGINT          NOT NULL IDENTITY(1,1),
+    At                  DATETIME2       NOT NULL DEFAULT SYSUTCDATETIME(),
+    ActorTenDangNhap    NVARCHAR(50)    NULL,       -- FK logic tới tblTaiKhoan.TenDangNhap
+    Action              NVARCHAR(10)    NOT NULL,   -- 'INSERT' | 'UPDATE' | 'DELETE'
+    TableName           SYSNAME         NOT NULL,
+    PrimaryKeyJson      NVARCHAR(MAX)   NOT NULL,   -- VD: {"MaPhuong":1}
+    OldDataJson         NVARCHAR(MAX)   NULL,       -- NULL khi INSERT
+    NewDataJson         NVARCHAR(MAX)   NULL,       -- NULL khi DELETE
+    AppName             NVARCHAR(128)   NULL DEFAULT APP_NAME(),
+    HostName            NVARCHAR(128)   NULL DEFAULT HOST_NAME(),
+    CONSTRAINT PK_AuditLog PRIMARY KEY CLUSTERED (AuditLogId)
+);
+GO
+
+-- ============================================================
+-- TRIGGERS — CÁCH B: Tự động ghi AuditLog qua trigger
+-- Actor được lấy từ SESSION_CONTEXT(N'ActorTenDangNhap').
+-- Ứng dụng cần gọi trước khi thao tác:
+--   EXEC sys.sp_set_session_context
+--       @key = N'ActorTenDangNhap', @value = N'<TenDangNhap>';
+-- ============================================================
+
+-- ---- Trigger: tblPhuong ----
+CREATE OR ALTER TRIGGER trg_AuditLog_tblPhuong
+ON dbo.tblPhuong
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @actor NVARCHAR(50) =
+        CAST(SESSION_CONTEXT(N'ActorTenDangNhap') AS NVARCHAR(50));
+
+    IF EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'INSERT', N'tblPhuong',
+            (SELECT i.MaPhuong AS MaPhuong FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL,
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM deleted) AND NOT EXISTS (SELECT 1 FROM inserted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'DELETE', N'tblPhuong',
+            (SELECT d.MaPhuong AS MaPhuong FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL
+        FROM deleted d;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'UPDATE', N'tblPhuong',
+            (SELECT i.MaPhuong AS MaPhuong FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i
+        JOIN deleted d ON i.MaPhuong = d.MaPhuong;
+    END
+END
+GO
+
+-- ---- Trigger: tblTodanpho ----
+CREATE OR ALTER TRIGGER trg_AuditLog_tblTodanpho
+ON dbo.tblTodanpho
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @actor NVARCHAR(50) =
+        CAST(SESSION_CONTEXT(N'ActorTenDangNhap') AS NVARCHAR(50));
+
+    IF EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'INSERT', N'tblTodanpho',
+            (SELECT i.MaTDP AS MaTDP FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL,
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM deleted) AND NOT EXISTS (SELECT 1 FROM inserted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'DELETE', N'tblTodanpho',
+            (SELECT d.MaTDP AS MaTDP FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL
+        FROM deleted d;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'UPDATE', N'tblTodanpho',
+            (SELECT i.MaTDP AS MaTDP FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i
+        JOIN deleted d ON i.MaTDP = d.MaTDP;
+    END
+END
+GO
+
+-- ---- Trigger: tblNhankhau ----
+CREATE OR ALTER TRIGGER trg_AuditLog_tblNhankhau
+ON dbo.tblNhankhau
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @actor NVARCHAR(50) =
+        CAST(SESSION_CONTEXT(N'ActorTenDangNhap') AS NVARCHAR(50));
+
+    IF EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'INSERT', N'tblNhankhau',
+            (SELECT i.MaNK AS MaNK FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL,
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM deleted) AND NOT EXISTS (SELECT 1 FROM inserted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'DELETE', N'tblNhankhau',
+            (SELECT d.MaNK AS MaNK FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL
+        FROM deleted d;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'UPDATE', N'tblNhankhau',
+            (SELECT i.MaNK AS MaNK FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i
+        JOIN deleted d ON i.MaNK = d.MaNK;
+    END
+END
+GO
+
+-- ---- Trigger: tblNguoi_phu_thuoc ----
+CREATE OR ALTER TRIGGER trg_AuditLog_tblNguoi_phu_thuoc
+ON dbo.tblNguoi_phu_thuoc
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @actor NVARCHAR(50) =
+        CAST(SESSION_CONTEXT(N'ActorTenDangNhap') AS NVARCHAR(50));
+
+    IF EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'INSERT', N'tblNguoi_phu_thuoc',
+            (SELECT i.MaNPT AS MaNPT FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL,
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM deleted) AND NOT EXISTS (SELECT 1 FROM inserted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'DELETE', N'tblNguoi_phu_thuoc',
+            (SELECT d.MaNPT AS MaNPT FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL
+        FROM deleted d;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'UPDATE', N'tblNguoi_phu_thuoc',
+            (SELECT i.MaNPT AS MaNPT FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i
+        JOIN deleted d ON i.MaNPT = d.MaNPT;
+    END
+END
+GO
+
+-- ---- Trigger: tblBienDong ----
+CREATE OR ALTER TRIGGER trg_AuditLog_tblBienDong
+ON dbo.tblBienDong
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @actor NVARCHAR(50) =
+        CAST(SESSION_CONTEXT(N'ActorTenDangNhap') AS NVARCHAR(50));
+
+    IF EXISTS (SELECT 1 FROM inserted) AND NOT EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'INSERT', N'tblBienDong',
+            (SELECT i.MaBD AS MaBD FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL,
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM deleted) AND NOT EXISTS (SELECT 1 FROM inserted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'DELETE', N'tblBienDong',
+            (SELECT d.MaBD AS MaBD FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            NULL
+        FROM deleted d;
+        RETURN;
+    END
+    IF EXISTS (SELECT 1 FROM inserted) AND EXISTS (SELECT 1 FROM deleted)
+    BEGIN
+        INSERT INTO dbo.AuditLog
+            (ActorTenDangNhap, Action, TableName, PrimaryKeyJson, OldDataJson, NewDataJson)
+        SELECT @actor, N'UPDATE', N'tblBienDong',
+            (SELECT i.MaBD AS MaBD FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT d.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER),
+            (SELECT i.* FOR JSON PATH, WITHOUT_ARRAY_WRAPPER)
+        FROM inserted i
+        JOIN deleted d ON i.MaBD = d.MaBD;
+    END
+END
+GO
 
 
 -- ============================================================
