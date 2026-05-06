@@ -76,3 +76,8 @@ INSERT INTO tblBienDong
 -- Khai sinh con hộ bà Nga
     (4,    10,    N'Khai sinh',   '2015-08-20', N'Đặng Văn Giang', N'Khai sinh cho Đỗ Thị Ngân, sinh ngày 12/08/2015');
 GO
+
+-- ============================================================
+INSERT INTO tblTaiKhoan
+    (TenDangNhap, MatKhau) VALUES 
+    ('admin','123');

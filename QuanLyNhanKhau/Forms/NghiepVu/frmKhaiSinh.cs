@@ -145,7 +145,7 @@ namespace QuanLyNhanKhau.Forms.NghiepVu
                     tran.Commit();
 
                     MessageBox.Show("Đăng ký khai sinh thành công!");
-
+                    LoadKhaiSinh(maNK);
                     // ===== CLEAR FORM =====
                     txtHoTenTre.Clear();
                     txtNguoiThucHien.Clear();
