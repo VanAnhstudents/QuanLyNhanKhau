@@ -7,14 +7,11 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
 {
     public partial class frmNguoiPhuThuoc : Form
     {
-        // -------------------------------------------------------
-        // Kết nối CSDL — chỉ khai báo một chỗ duy nhất
-        // -------------------------------------------------------
+
         private readonly string _connStr =
             @"Data Source=.;Initial Catalog=QuanLyNhanKhau;Integrated Security=True";
 
-        // Flag chặn sự kiện SelectedIndexChanged kích hoạt
-        // trong lúc đang gán DataSource cho cboChuHo
+
         private bool _isLoading = false;
 
         public frmNguoiPhuThuoc()
@@ -22,19 +19,13 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
             InitializeComponent();
         }
 
-        // ============================================================
-        // HELPER: tạo SqlConnection mới (dùng using bên ngoài)
-        // ============================================================
+
         private SqlConnection CreateConnection() =>
             new SqlConnection(_connStr);
 
-        // ============================================================
-        // Load danh sách chủ hộ vào ComboBox
-        // Dùng SP: sp_GetAllNhanKhauComboBox
-        // ============================================================
         private void LoadChuHo()
         {
-            _isLoading = true;                   // khóa event trước khi gán DataSource
+            _isLoading = true;                 
             try
             {
                 using (SqlConnection conn = CreateConnection())
@@ -49,19 +40,16 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
                     cboChuHo.DataSource = dt;
                     cboChuHo.DisplayMember = "HoTen";
                     cboChuHo.ValueMember = "MaNK";
-                    cboChuHo.SelectedIndex = 0;  // trỏ vào placeholder
+                    cboChuHo.SelectedIndex = 0;  
                 }
             }
             finally
             {
-                _isLoading = false;              // mở lại event dù có lỗi
+                _isLoading = false;            
             }
         }
 
-        // ============================================================
-        // Load danh sách người phụ thuộc theo chủ hộ
-        // Dùng SP: sp_GetNguoiPhuThuocByNK
-        // ============================================================
+
         private void LoadNguoiPhuThuoc(int maNK)
         {
             using (SqlConnection conn = CreateConnection())
@@ -78,9 +66,7 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
             }
         }
 
-        // ============================================================
-        // Xóa trắng form nhập liệu
-        // ============================================================
+
         private void ClearForm()
         {
             txtHoTen.Clear();
@@ -90,25 +76,18 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
             radNam.Checked = true;
         }
 
-        // ============================================================
-        // EVENT — Load form
-        // ============================================================
+
         private void frmNguoiPhuThuoc_Load(object sender, EventArgs e)
         {
-            // Tắt tự sinh cột — chỉ dùng cột đã định nghĩa sẵn trong Designer
             dgvNguoiPhuThuoc.AutoGenerateColumns = false;
             LoadChuHo();
         }
 
-        // ============================================================
-        // EVENT — Chọn chủ hộ
-        // ============================================================
+
         private void cboChuHo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Bỏ qua khi đang load DataSource (tránh vòng lặp)
             if (_isLoading) return;
 
-            // Bỏ qua khi chưa chọn hoặc chọn placeholder (MaNK = 0)
             if (cboChuHo.SelectedValue == null) return;
             int maNK = Convert.ToInt32(cboChuHo.SelectedValue);
             if (maNK == 0) return;
@@ -117,9 +96,7 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
             ClearForm();
         }
 
-        // ============================================================
-        // EVENT — Click vào dòng trong DataGridView → điền form
-        // ============================================================
+
         private void dgvNguoiPhuThuoc_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex < 0) return;
@@ -130,23 +107,18 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
             txtNgheNghiep.Text = row.Cells["NgheNghiep"].Value?.ToString() ?? "";
             cboQuanHe.Text = row.Cells["QuanHe"].Value?.ToString() ?? "";
 
-            // NgaySinh có thể NULL trong CSDL (DATE nullable)
             if (row.Cells["NgaySinh"].Value != DBNull.Value && row.Cells["NgaySinh"].Value != null)
                 dtpNgaySinh.Value = Convert.ToDateTime(row.Cells["NgaySinh"].Value);
             else
                 dtpNgaySinh.Value = DateTime.Today;
 
-            // GioiTinh: BIT nullable → convert an toàn
             bool isNam = row.Cells["GioiTinh"].Value != DBNull.Value
                          && Convert.ToBoolean(row.Cells["GioiTinh"].Value);
             radNam.Checked = isNam;
             radNu.Checked = !isNam;
         }
 
-        // ============================================================
-        // THÊM người phụ thuộc
-        // Dùng SP: sp_ThemNguoiPhuThuoc
-        // ============================================================
+
         private void btnThem_Click(object sender, EventArgs e)
         {
             if (!ValidateForm()) return;
@@ -185,10 +157,6 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
             }
         }
 
-        // ============================================================
-        // SỬA người phụ thuộc
-        // Dùng SP: sp_SuaNguoiPhuThuoc
-        // ============================================================
         private void btnSua_Click(object sender, EventArgs e)
         {
             if (dgvNguoiPhuThuoc.CurrentRow == null)
@@ -235,10 +203,7 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
             }
         }
 
-        // ============================================================
-        // XÓA người phụ thuộc
-        // Dùng SP: sp_XoaNguoiPhuThuoc
-        // ============================================================
+
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (dgvNguoiPhuThuoc.CurrentRow == null)
@@ -285,17 +250,11 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
             }
         }
 
-        // ============================================================
-        // Nút Làm Mới — xóa trắng form nhập liệu
-        // ============================================================
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             ClearForm();
         }
 
-        // ============================================================
-        // VALIDATE — kiểm tra dữ liệu trước khi Thêm / Sửa
-        // ============================================================
         private bool ValidateForm()
         {
             // Kiểm tra đã chọn chủ hộ chưa
@@ -307,7 +266,6 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
                 return false;
             }
 
-            // Kiểm tra họ tên
             if (string.IsNullOrWhiteSpace(txtHoTen.Text))
             {
                 MessageBox.Show("Vui lòng nhập họ tên!", "Thông báo",
@@ -316,7 +274,6 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
                 return false;
             }
 
-            // Kiểm tra quan hệ
             if (string.IsNullOrWhiteSpace(cboQuanHe.Text))
             {
                 MessageBox.Show("Vui lòng chọn quan hệ với chủ hộ!", "Thông báo",
@@ -328,9 +285,7 @@ namespace QuanLyNhanKhau.Forms.NhanKhau
             return true;
         }
 
-        // ============================================================
-        // Các event stub còn lại (giữ lại để Designer không báo lỗi)
-        // ============================================================
+
         private void grpCac_Enter(object sender, EventArgs e) { }
         private void cboQuanHe_SelectedIndexChanged(object sender, EventArgs e) { }
     }
